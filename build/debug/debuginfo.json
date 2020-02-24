@@ -1,0 +1,23 @@
+[
+  {
+    "artifact": "frcJava (in project Robot-2020-Official)",
+    "target": "roborio",
+    "debugfile": "frcJava_roborio.debugconfig",
+    "project": "Robot-2020-Official",
+    "language": "java"
+  },
+  {
+    "artifact": "frcJava (in project Robot2020)",
+    "target": "roborio",
+    "debugfile": "frcJava_roborio.debugconfig",
+    "project": "Robot2020",
+    "language": "java"
+  },
+  {
+    "artifact": "frcJava (in project Robot2020Official)",
+    "target": "roborio",
+    "debugfile": "frcJava_roborio.debugconfig",
+    "project": "Robot2020Official",
+    "language": "java"
+  }
+]
