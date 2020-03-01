@@ -85,41 +85,41 @@ public class Transporter extends SubsystemBase {
   @Override
   public void periodic() { 
 
-    if(!isTransorterFull()){
-      Robot.intake.changeIntakeFlag(Flag.START);
-      SmartDashboard.putNumber("transporter_Stage", transporterFlag);
-      if(transporterFlag == 0){
-        if(isBallDown()){
-          transporterFlag = 1; //set stage 1
-          Robot.intake.changeIntakeFlag(Flag.STOP);
-        } else if(isBallMiddle()){
-          transportMotor.set(constants.oneBallsSpeedTransporter);
-        }else stopMotor();
-      }
+    // if(!isTransorterFull()){
+    //   Robot.intake.changeIntakeFlag(Flag.START);
+    //   SmartDashboard.putNumber("transporter_Stage", transporterFlag);
+    //   if(transporterFlag == 0){
+    //     if(isBallDown()){
+    //       transporterFlag = 1; //set stage 1
+    //       Robot.intake.changeIntakeFlag(Flag.STOP);
+    //     } else if(isBallMiddle()){
+    //       transportMotor.set(constants.oneBallsSpeedTransporter);
+    //     }else stopMotor();
+    //   }
       
-      if(transporterFlag == 1){
-        transportMotor.set(constants.twoBallsSpeedTransporter); //set power
-        if(isBallMiddle()){
-          transporterFlag = 2;//set stage 2
-        }
-      }
+    //   if(transporterFlag == 1){
+    //     transportMotor.set(constants.twoBallsSpeedTransporter); //set power
+    //     if(isBallMiddle()){
+    //       transporterFlag = 2;//set stage 2
+    //     }
+    //   }
 
-      if(transporterFlag == 2){
-        if(!isBallMiddle()){
-          Robot.intake.changeIntakeFlag(Flag.START);
-          transportMotor.set(0.0);
-          transporterFlag = 0;
-        }
-      }  
-    } else if(ultrasonic.getRangeMM()/10 >= 18.0){
-      stopMotor();
-    } else if(ultrasonic.getRangeMM()/10 <= 18.0){
-      stopMotor();
-      Robot.intake.changeIntakeFlag(Flag.STOP);
-    }
+    //   if(transporterFlag == 2){
+    //     if(!isBallMiddle()){
+    //       Robot.intake.changeIntakeFlag(Flag.START);
+    //       transportMotor.set(0.0);
+    //       transporterFlag = 0;
+    //     }
+    //   }  
+    // } else if(ultrasonic.getRangeMM()/10 >= 18.0){
+    //   stopMotor();
+    // } else if(ultrasonic.getRangeMM()/10 <= 18.0){
+    //   stopMotor();
+    //   Robot.intake.changeIntakeFlag(Flag.STOP);
+    // }
   
 
-    //joyControl();
+    joyControl();
   }
 
   public void configureSparkMax(CANSparkMax spark){
@@ -187,7 +187,7 @@ public class Transporter extends SubsystemBase {
     SmartDashboard.putBoolean("transporter_LimitSwitch", isTransorterFull());
     SmartDashboard.putNumber("transporter_neoEncoder", getHallSensor());
     SmartDashboard.putString("transporter_state", mState.toString());
-    SmartDashboard.putNumber("DetectedColor", colorSensor.getIR());
-    SmartDashboard.putNumber("Ultrasonic", ultrasonic.getRangeMM()/10);
+    SmartDashboard.putNumber("transporter_DetectedColor", colorSensor.getIR());
+    SmartDashboard.putNumber("transporter_Ultrasonic", ultrasonic.getRangeMM()/10);
   }
 }

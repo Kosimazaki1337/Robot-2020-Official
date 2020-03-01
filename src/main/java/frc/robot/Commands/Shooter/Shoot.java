@@ -39,8 +39,8 @@ public class Shoot extends CommandBase {
 
   @Override
   public void initialize() {
-    rProfile = new TrapezoidalMotionProfile(constants.maxShootSpeed, constants.maxShootSpeed, 1.0);
-    lProfile = new TrapezoidalMotionProfile(constants.maxShootSpeed, constants.maxShootSpeed, 1.0);
+    rProfile = new TrapezoidalMotionProfile(constants.maxShootSpeed, 18.0, 15.0);
+    lProfile = new TrapezoidalMotionProfile(constants.maxShootSpeed, 18.0, 15.0);
 
     leftController = new ShooterLeftController(lProfile);
     rightController = new ShooterRightController(rProfile);
@@ -49,14 +49,14 @@ public class Shoot extends CommandBase {
 
     oldTime = Timer.getFPGATimestamp();
     sumTime = 0;
-    constants.setShootingFlag(true);
-    SmartDashboard.putBoolean("isS", constants.isShooting);
+
+    Robot.shooter.changeShootState(true);
   }
 
   @Override
   public void execute() {
     //Robot.aiming.holdPosition();
-    //leftController.update();
+    leftController.update();
     rightController.update();
     if(Robot.shooter.getRSpeed() >= 60){
       //Robot.transporter.setPower(0.25);
@@ -66,7 +66,7 @@ public class Shoot extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     Robot.shooter.setShootSpeed(0, 0);
-    constants.setShootingFlag(false);
+    Robot.shooter.changeShootState(false);
   }
 
   @Override
@@ -74,6 +74,7 @@ public class Shoot extends CommandBase {
     double newTime = Timer.getFPGATimestamp();
     sumTime += newTime - oldTime;
     oldTime = newTime;
-    return sumTime >= 3;
+    SmartDashboard.putNumber("SumTime", sumTime);
+    return sumTime >= 15;
   }
 }

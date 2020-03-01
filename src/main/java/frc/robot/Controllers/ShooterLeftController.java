@@ -8,6 +8,7 @@
 package frc.robot.Controllers;
 
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.Robot;
@@ -20,7 +21,7 @@ public class ShooterLeftController implements DrivetrainController {
 	
 	double startT;
 	TrapezoidalMotionProfile profile;
-	SpeedPID speedPID;
+	PIDController speedController;
 	
 	double linearActual, linearSetpoint, linearError;
 	public ShooterLeftController(TrapezoidalMotionProfile profile) {
@@ -30,7 +31,7 @@ public class ShooterLeftController implements DrivetrainController {
 		this.profile = profile;
 		refreshConstants();
 
-		speedPID = new SpeedPID(Constants.kPShootLeft, Constants.kIShootLeft, Constants.kDShootLeft, Constants.kFShootLeft);
+		speedController = new PIDController(Constants.kPShootLeft, Constants.kIShootLeft, Constants.kDShootLeft);
 	}
 
 	/*
@@ -48,8 +49,8 @@ public class ShooterLeftController implements DrivetrainController {
 		linearActual = Robot.shooter.getLSpeed();
 		linearSetpoint = point.pos;
 		double error = linearSetpoint-linearActual;
-		//double output = speedPID.calculate(-linearSetpoint, -linearActual) + feedforward;
-		double output = (error * 0.17) + feedforward;
+		SmartDashboard.putNumber("linearActualLeft", linearActual);
+		double output = speedController.calculate(linearActual, linearSetpoint) + point.pos*0.01;
 		if(output > 0.75){
 			output = 0.75;
 		}else if(output < -0.75){

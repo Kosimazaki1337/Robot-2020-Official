@@ -24,6 +24,7 @@ import frc.robot.Subsystems.Transporter;
 public class Robot extends TimedRobot {
   private static final String kDefaultAuto = "Default";
   private static final String kCustomAuto = "My Auto";
+  private static final String kDriveStraight = "Straight";
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
 
@@ -42,8 +43,9 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
-    m_chooser.addOption("My Auto", kCustomAuto);
-    SmartDashboard.putData("Auto choices", m_chooser);
+    m_chooser.addOption("Lol Automatyka XD", kCustomAuto);
+    m_chooser.addOption("Drive Straight", kDriveStraight);
+    SmartDashboard.putData("AutoChoices", m_chooser);
     
     initSubsystems();
     oi = new OI();
@@ -56,13 +58,14 @@ public class Robot extends TimedRobot {
     sdbi.logs();
     CommandScheduler.getInstance().run();
     leds.periodic();
+    m_autoSelected = m_chooser.getSelected();
+    m_autoSelected = SmartDashboard.getString("AutoSelector", kDefaultAuto);
   }
 
   @Override
   public void autonomousInit() {
-    m_autoSelected = m_chooser.getSelected();
-    // m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
-    System.out.println("Auto selected: " + m_autoSelected);
+    
+    SmartDashboard.putString("SelectedMode: " , m_autoSelected);
 
     autonomousCommand.getAutonomousCommand().schedule();
   }

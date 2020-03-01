@@ -82,10 +82,10 @@ public class LimeLight extends SubsystemBase {
   }
 
   public void logs(){
-    SmartDashboard.putNumber("xOffset", getXOffset());
-    SmartDashboard.putNumber("yOffset", getYOffset());
-    SmartDashboard.putBoolean("isTarget", isTargetVisible());
-    SmartDashboard.putNumber("DistanceToTarget", getDistance());
+    SmartDashboard.putNumber("limelight_xOffset", getXOffset());
+    SmartDashboard.putNumber("limelight_yOffset", getYOffset());
+    SmartDashboard.putBoolean("limelight_isTarget", isTargetVisible());
+    SmartDashboard.putNumber("limelight_DistanceToTarget", getDistance());
   }
 
   public void update(){

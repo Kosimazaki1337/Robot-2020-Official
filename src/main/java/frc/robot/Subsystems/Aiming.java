@@ -34,12 +34,13 @@ public class Aiming extends SubsystemBase {
 
     aimMotor.configFactoryDefault();
 
-    aimPID = new SpeedPID(0.1, 0.0, 0.0, 0.0);
+    aimPID = new SpeedPID(0.2, 0.001, 0.01, 0.0);
   }
 
   @Override
   public void periodic() {
     opAim();
+    getShootingState();
     //checkPotentiometerPosition();
   }
 
@@ -70,17 +71,21 @@ public class Aiming extends SubsystemBase {
 
   public double getAngle(){
     positionToHold = potentiometer.get();
-    double positionRounded = Math.round(positionToHold*10000);
-    positionToHold = positionRounded/100;
+    double positionRounded = Math.round(positionToHold*1000);
+    positionToHold = positionRounded/10;
     return positionToHold;
-  }
-
-  public void logs(){
-    SmartDashboard.putNumber("PositionToHold", positionToHold);
-    SmartDashboard.putNumber("Potentiometer", getAngle());
   }
 
   public double currentAimPosition(){
     return getAngle();
+  }
+
+  public boolean getShootingState(){
+    return constants.getShootingFlag();
+  }
+
+  public void logs(){
+    SmartDashboard.putNumber("aiming_ActualPosition", getAngle());
+    SmartDashboard.putNumber("AimMotorPercent", aimMotor.getMotorOutputPercent());
   }
 }

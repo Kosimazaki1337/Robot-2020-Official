@@ -28,9 +28,12 @@ public class Constants {
     public static final double kLongCANTimeoutSec = 0.01;
     public static final double kDriveVoltageRampRate = 0.0;
 
-    public static final double openLoopkP = 0.15;
-    public static final double openLoopkI = 0.0018;
-    public static final double openLoopkD = 0.01;
+    public static final double openLoopkPLeft = 0.15;
+    public static final double openLoopkILeft = 0.0018;
+    public static final double openLoopkDLeft = 0.0;
+    public static final double openLoopkPRight = 0.15;
+    public static final double openLoopkIRight = 0.0018;
+    public static final double openLoopkDRight = 0.0;
     public static final double openLoopErrorTolerance = 0.05;
     public static final double joyDeadZone = 0.12;
 
@@ -56,16 +59,16 @@ public class Constants {
     public double intakeSwitch = 0;
 
     //Shooter Constants
-    public static final double kPShootLeft = 0.1975; 
-    public static final double kIShootLeft = 0.001; 
-    public static final double kDShootLeft = 0.0; 
+    public static final double kPShootLeft = 0.017; 
+    public static final double kIShootLeft = 0.0015; 
+    public static final double kDShootLeft = 0.0001; 
     public static final double kFShootLeft = 0.0; 
-    public static final double kPShootRight = 0.22; //0.22
-    public static final double kIShootRight = 0.001; //0.001
-    public static final double kDShootRight = 0.00;  
+    public static final double kPShootRight = 0.013; //0.22
+    public static final double kIShootRight = 0.0015; //0.001
+    public static final double kDShootRight = 0.00016;  
     public static final double kFShootRight = 0.0; 
 
-    public static final double maxShootSpeed = 10.0; //RPS
+    public static final double maxShootSpeed =  70.0; //RPS
     public static final double maxShootAcceleration = 8.0;
     public static final double kShooterLeft_kV = 0.0141;
     public static final double kShooterLeft_kA = 0.00365;
@@ -96,6 +99,10 @@ public class Constants {
     //Aiming Constants
     public static double maxUpPotentimeterValue = 0.28;
     public static double minDownPotentimeterValue = 0.42;
+
+    public static double aimingkP = 0;
+    public static double aimingkI = 0;
+    public static double aimingkD = 0;
 
     public boolean isShooting = false;
     

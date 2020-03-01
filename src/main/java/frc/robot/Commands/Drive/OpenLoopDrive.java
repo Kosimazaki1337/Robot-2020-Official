@@ -8,10 +8,10 @@
 package frc.robot.Commands.Drive;
 
 import edu.wpi.first.wpilibj.controller.PIDController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
-import frc.robot.Subsystems.DriveTrain;
 import frc.robot.motion.SpeedPID;
 
 public class OpenLoopDrive extends CommandBase {
@@ -30,23 +30,23 @@ public class OpenLoopDrive extends CommandBase {
     constants = new Constants().getConstants();
 
 
-    // leftController = new PIDController(constants.openLoopkP,
-    // constants.openLoopkI, constants.openLoopkD,
-    // constants.kLongCANTimeoutSec);
-    // leftController.setTolerance(constants.openLoopErrorTolerance);
+    leftController = new PIDController(constants.openLoopkPLeft,
+    constants.openLoopkILeft, constants.openLoopkDLeft,
+    constants.kLongCANTimeoutSec);
+    leftController.setTolerance(constants.openLoopErrorTolerance);
 
-    // righController = new PIDController(constants.openLoopkP,
-    // constants.openLoopkI, constants.openLoopkD,
-    // constants.kLongCANTimeoutSec);
-    // righController.setTolerance(constants.openLoopErrorTolerance);
+    righController = new PIDController(constants.openLoopkPRight,
+    constants.openLoopkIRight, constants.openLoopkDRight,
+    constants.kLongCANTimeoutSec);
+    righController.setTolerance(constants.openLoopErrorTolerance);
 
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    speedPIDLeft = new SpeedPID(0.1, 0.00, 0.0, 0.0);
-    speedPIDRight = new SpeedPID(0.1, 0.00, 0.0, 0.0);
+    speedPIDLeft = new SpeedPID(0.1, 0.001, 0.0, 0.0);
+    speedPIDRight = new SpeedPID(0.1, 0.001, 0.0, 0.0);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -76,10 +76,10 @@ public class OpenLoopDrive extends CommandBase {
           rightSpeed = -Math.max(-speedV, -turnV);
         }
       }
-      // drive.setSpeed(leftController.calculate(drive.getLeftSpeed(), leftSpeed*4),
-      // righController.calculate(drive.getRightSpeed(), rightSpeed*4));
-      Robot.driveTrain.setSpeed(speedPIDLeft.calculate(leftSpeed*4.3, Robot.driveTrain.getLeftSpeed()),
-        speedPIDRight.calculate(-rightSpeed*4*3, -Robot.driveTrain.getRightSpeed()));
+      Robot.driveTrain.setSpeed(leftController.calculate(Robot.driveTrain.getLeftSpeed(), leftSpeed*4),
+      righController.calculate(-Robot.driveTrain.getRightSpeed(), -rightSpeed*4));
+      SmartDashboard.putNumber("leftSpeed", leftController.calculate(Robot.driveTrain.getLeftSpeed(), leftSpeed*4));
+      SmartDashboard.putNumber("rightSpeed", -rightSpeed);
       }else{
         Robot.driveTrain.setSpeed(0.0, 0.0);
     }

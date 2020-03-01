@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.PortMap;
+import frc.robot.Robot;
 
 public class LEDState extends SubsystemBase {
   private AddressableLED LEDS;
@@ -38,8 +39,10 @@ public class LEDState extends SubsystemBase {
   public void periodic() {
     //blink();
     //rainbowL();
-    
     turnOFF();
+
+    //checkDriveTrain();
+    //checkShooter();
     LEDS.setData(LEDBuffer);
   }
 
@@ -53,7 +56,7 @@ public class LEDState extends SubsystemBase {
       LEDBuffer.setHSV(i, hue, 255, 128);
     }
     // Increase by to make the rainbow "move"
-    m_rainbowFirstPixelHueL += 3;
+    m_rainbowFirstPixelHueL += 2;
     // Check bounds
     m_rainbowFirstPixelHueL %= 180;
   }
@@ -84,20 +87,51 @@ public class LEDState extends SubsystemBase {
   }
 
 
-    private void TeloOP(){
-      long nowTime = System.currentTimeMillis();
-  
-      if(nowTime - oldTimeBlink > 1000){
-        flagBlink = !flagBlink;
-        oldTimeBlink = nowTime;
+    private void checkDriveTrain(){
+      if(Robot.driveTrain.getRightSpeed() < -0.1){
+        for(var i = 0; i < 3; i++){
+          LEDBuffer.setLED(i, Color.kRed);
+        }
+      }else if(Robot.driveTrain.getRightSpeed() > 0.1){
+        for(var i = 0; i < 3; i++){
+          LEDBuffer.setLED(i, Color.kGreen);
+        }
+      }else{
+        for(var i = 0; i < 3; i++){
+          LEDBuffer.setLED(i, Color.kBlack);
+        }
       }
-      if(flagBlink){
-        setRGB(255,140,0);
-        //setColor(Color.kRed);
-      } else {
-        setRGB(0, 0, 0);
-        //turnOFF();
-      } 
+
+      if(Robot.driveTrain.getLeftSpeed() < -0.1){
+        for(var i = 58; i < 61; i++){
+          LEDBuffer.setLED(i, Color.kRed);
+        }
+      }else if(Robot.driveTrain.getLeftSpeed() > 0.1){
+        for(var i = 58; i < 61; i++){
+          LEDBuffer.setLED(i, Color.kGreen);
+        }
+      }else{
+        for(var i = 59; i < 61; i++){
+          LEDBuffer.setLED(i, Color.kBlack);
+        }
+      }
+  }
+
+  public void checkShooter(){
+    if(Robot.shooter.getRightSpeed() < 0){
+      for(var i = 27; i < 29; i++){
+        LEDBuffer.setLED(i, Color.kRed);
+      }
+    }else if(Robot.shooter.getRightSpeed() > 0){
+      for(var i = 27; i < 29; i++){
+        LEDBuffer.setLED(i, Color.kGreen);
+      }
+    }else{
+      for(var i = 27; i < 29; i++){
+        LEDBuffer.setLED(i, Color.kBlack);
+      }
+    }
+
 
   }
 

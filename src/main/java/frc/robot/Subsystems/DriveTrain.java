@@ -28,7 +28,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.PortMap;
-
+import frc.robot.Robot;
 import frc.robot.Commands.Drive.*;
 
 public class DriveTrain extends SubsystemBase {
@@ -115,7 +115,6 @@ public class DriveTrain extends SubsystemBase {
     if(mState == ControlState.OPEN_LOOP){
       setDefaultCommand(new OpenLoopDrive());
     }
-
   }
 
   public void setSpeed(double leftSpeed, double rightSpeed){
@@ -183,8 +182,8 @@ public class DriveTrain extends SubsystemBase {
     SmartDashboard.putNumber("driveTrain_SlaveSpeed", lSlaveM.getMotorOutputVoltage());
     SmartDashboard.putNumber("driveTrain_LeftSideVoltage", lMaster.getMotorOutputPercent());
     SmartDashboard.putNumber("driveTrain_RightSideVoltage", rMaster.getMotorOutputPercent());
-    SmartDashboard.putNumber("driveTrain_LeftSideVelocity", getLeftSpeed());
-    SmartDashboard.putNumber("driveTrain_RightSideVelocity", getRightSpeed());
-    SmartDashboard.putNumber("gyroAngle", gyro.getAngle());
+    SmartDashboard.putNumber("driveTrain_LeftMPS", getLeftSpeed());
+    SmartDashboard.putNumber("driveTrain_RightMPS", getRightSpeed());
+    SmartDashboard.putNumber("driveTrain_GyroAngle", gyro.getAngle());
   }
 }

@@ -29,7 +29,8 @@ public class AutoAim extends CommandBase {
   @Override
   public void initialize() {
     positionToHold = Robot.aiming.getAngle();
-    aimPID = new SpeedPID(0.2, 0.001, 0.0, 0.0, 0.9, -0.9);
+    aimPID = new SpeedPID(0.15, 0.007, 0.01, 0.0015, 0.9, -0.9);
+    SmartDashboard.putNumber("Test", 1);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -39,18 +40,20 @@ public class AutoAim extends CommandBase {
     SmartDashboard.putNumber("HoldPosition", positionToHold);
     SmartDashboard.putNumber("actualPotentiometer", actualPosition);
     Robot.aiming.setAimSpeed(aimPID.calculate(positionToHold, actualPosition));
+    SmartDashboard.putNumber("Test", 2);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     Robot.aiming.setAimSpeed(0.0);
+    SmartDashboard.putNumber("Test", 3);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    SmartDashboard.putBoolean("isShooting", constants.getShootingFlag());
-    return !constants.getShootingFlag();
+    SmartDashboard.putBoolean("isShooting", Robot.aiming.getShootingState());
+    return !Robot.shooter.getShootState();
   }
 }

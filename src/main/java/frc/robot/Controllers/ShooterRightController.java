@@ -8,6 +8,7 @@
 package frc.robot.Controllers;
 
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.Robot;
@@ -21,6 +22,7 @@ public class ShooterRightController implements DrivetrainController {
 	double startT;
 	TrapezoidalMotionProfile profile;
 	SpeedPID speedPID;
+	PIDController speedController;
 	
 	double linearActual, linearSetpoint, linearError;
 	public ShooterRightController(TrapezoidalMotionProfile profile) {
@@ -30,7 +32,8 @@ public class ShooterRightController implements DrivetrainController {
 		this.profile = profile;
 		refreshConstants();
 
-		speedPID = new SpeedPID(Constants.kPShootRight, Constants.kIShootRight, Constants.kDShootRight, Constants.kFShootRight);
+
+		speedController = new PIDController(Constants.kPShootRight, Constants.kIShootRight, Constants.kDShootRight, 0.001);
 	}
 
 	/*
@@ -48,21 +51,21 @@ public class ShooterRightController implements DrivetrainController {
 		linearActual = Robot.shooter.getRSpeed();
 		linearSetpoint = point.pos;
 		double error = linearSetpoint-linearActual;
-		double output = speedPID.calculate(linearSetpoint, linearActual);
-		SmartDashboard.putNumber("linearActual", linearActual);
-		SmartDashboard.putNumber("linearSetpoint", linearSetpoint);
-		//double output = (error *constants.kPShootRight) + feedforward;
-		if(output > 0.5){
-			output = 0.5;
-		}else if(output < -0.5){
-			output = -0.5;
+		SmartDashboard.putNumber("linearActualRight", linearActual);
+		SmartDashboard.putNumber("error", error);
+		double output = speedController.calculate(linearActual, linearSetpoint) + point.pos*0.01;
+
+		if(output > 0.75){
+			output = 0.75;
+		}else if(output < -0.75){
+			output = -0.75;
 		}
 		
 		linearError = error;
 		Robot.shooter.setRightSpeed(output);
 		SmartDashboard.putNumber("Output RightShooterController", output);
 		
-		return t >= profile.getDuration() && Math.abs(error) < constants.allowedShooterError;
+		return Math.abs(error) < constants.allowedShooterError; //t >= profile.getDuration() &&
 	}
 
 	public void reset() {

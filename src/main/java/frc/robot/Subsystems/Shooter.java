@@ -28,6 +28,8 @@ public class Shooter extends SubsystemBase {
 
   Constants constants;
 
+  boolean shoot = false;
+
   public Shooter(){
     lMaster = new WPI_TalonSRX(PortMap.kLMasterShooter);
     rMaster = new WPI_TalonSRX(PortMap.kRMasterShooter);
@@ -69,8 +71,8 @@ public class Shooter extends SubsystemBase {
 }
 
   public void steer(){
-    lSlave.set(ControlMode.PercentOutput, Robot.oi.getDriverJoystick().getRawAxis(1)/2);
-    rSlave.set(ControlMode.PercentOutput, Robot.oi.getDriverJoystick().getRawAxis(1)/2);
+    lMaster.set(ControlMode.PercentOutput, Robot.oi.getDriverJoystick().getRawAxis(1)/2);
+    rMaster.set(ControlMode.PercentOutput, Robot.oi.getDriverJoystick().getRawAxis(1)/2);
   }
 
   public void setShootSpeed(double left, double right){
@@ -105,19 +107,28 @@ public class Shooter extends SubsystemBase {
   }
 
   public double getLSpeed(){
-    return Math.abs(((lMaster.getSelectedSensorVelocity()/4096)*10)/3);
+    return -(((double)lMaster.getSelectedSensorVelocity()/4096)*10)/3;
   }
 
   public double getRSpeed(){
-    return Math.abs(((rMaster.getSelectedSensorVelocity()/4096)*10)/3);
+    return (((double)rMaster.getSelectedSensorVelocity()/4096)*10)/3;
+  }
+
+  public void changeShootState(boolean state){
+    shoot = state;
+  }
+
+  public boolean getShootState(){
+    return shoot;
   }
 
   public void logs(){
-    SmartDashboard.putNumber("leftEncoderShooter", lMaster.getSelectedSensorPosition());
-    SmartDashboard.putNumber("rightEncoderShooter", rMaster.getSelectedSensorPosition());
-    SmartDashboard.putNumber("leftEncoderShooterVelocity", getLSpeed());
-    SmartDashboard.putNumber("rightEncoderShooterVelocity", getRSpeed());
+    SmartDashboard.putNumber("shooter_RightEncoder", lMaster.getSelectedSensorPosition());
+    SmartDashboard.putNumber("shooter_LeftEncoder", rMaster.getSelectedSensorPosition());
+    SmartDashboard.putNumber("shooter_LeftRPS", getLSpeed());
+    SmartDashboard.putNumber("shooter_RightRPS", getRSpeed());
     SmartDashboard.putNumber("shooter_LeftVoltage", lMaster.getMotorOutputVoltage());
     SmartDashboard.putNumber("shooter_RighttVoltage", rMaster.getMotorOutputVoltage());
+    SmartDashboard.putBoolean("Shoot", constants.getShootingFlag());
   }
 }

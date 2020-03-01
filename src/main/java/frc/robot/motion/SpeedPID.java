@@ -137,10 +137,6 @@ public class SpeedPID {
 		}
 		
 		double out = (kP*error) + (kI*errSum) + (kD*(deltaPos/dT)) + (kF*setSpeed);
-
-		SmartDashboard.putNumber("kP", kP*error);
-		SmartDashboard.putNumber("kI", kI*errSum);
-		SmartDashboard.putNumber("kD", kD*(deltaPos/dT));
 		
 		if ( out > maxOut )
 			out = maxOut;
