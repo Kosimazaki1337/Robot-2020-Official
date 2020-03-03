@@ -28,13 +28,20 @@ public class LimeLight extends SubsystemBase {
   NetworkTableEntry isTarget;
   NetworkTableEntry xOffset;
   NetworkTableEntry yOffset;
+  NetworkTableEntry ledMode;
+
+  NetworkTableEntry pipeline;
 
   public LimeLight(){
     mNetworkTable = NetworkTableInstance.getDefault().getTable("limelight");
 
+    ledMode = mNetworkTable.getEntry("ledMode");
     isTarget = mNetworkTable.getEntry("tv");
     xOffset = mNetworkTable.getEntry("tx");
     yOffset = mNetworkTable.getEntry("ty");
+
+    pipeline = mNetworkTable.getEntry("pipeline");
+    pipeline.setNumber(0);
   }
 
   @Override
@@ -45,6 +52,10 @@ public class LimeLight extends SubsystemBase {
   public double getDistance(){
     return (FOVinMeters()*verticalPixelsFOV)/(2*getTargetWidthInPixels()*
     Math.tan(Math.toRadians(getHalfFOVinDegrees())));
+  }
+
+  public void setMode(int id){
+    ledMode.setNumber(id);
   }
 
   public synchronized double getXOffset() {
@@ -79,6 +90,10 @@ public class LimeLight extends SubsystemBase {
       isVisible = true;
     }
     return isVisible;
+  }
+
+  public void changePipeline(int pipe){
+    pipeline.setNumber(pipe);
   }
 
   public void logs(){

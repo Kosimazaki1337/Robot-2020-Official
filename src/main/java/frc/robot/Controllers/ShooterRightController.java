@@ -33,7 +33,7 @@ public class ShooterRightController implements DrivetrainController {
 		refreshConstants();
 
 
-		speedController = new PIDController(Constants.kPShootRight, Constants.kIShootRight, Constants.kDShootRight, 0.001);
+		speedController = new PIDController(Constants.kPShootRight, Constants.kIShootRight, Constants.kDShootRight);
 	}
 
 	/*
@@ -55,10 +55,10 @@ public class ShooterRightController implements DrivetrainController {
 		SmartDashboard.putNumber("error", error);
 		double output = speedController.calculate(linearActual, linearSetpoint) + point.pos*0.01;
 
-		if(output > 0.75){
-			output = 0.75;
-		}else if(output < -0.75){
-			output = -0.75;
+		if(output > constants.kMaxShooterOutput){
+			output = constants.kMaxShooterOutput;
+		}else if(output < -constants.kMaxShooterOutput){
+			output = -constants.kMaxShooterOutput;
 		}
 		
 		linearError = error;

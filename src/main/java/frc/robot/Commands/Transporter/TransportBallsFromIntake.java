@@ -38,7 +38,6 @@ public class TransportBallsFromIntake extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     Robot.transporter.stopMotor();
-    Robot.transporter.resetHallSensor();
   }
 
   // Returns true when the command should end.

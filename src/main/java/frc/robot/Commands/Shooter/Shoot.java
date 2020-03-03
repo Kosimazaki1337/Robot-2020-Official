@@ -14,6 +14,7 @@ import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.Controllers.ShooterLeftController;
 import frc.robot.Controllers.ShooterRightController;
+import frc.robot.Subsystems.Intake.Flag;
 import frc.robot.motion.SpeedPID;
 import frc.robot.motion.TrapezoidalMotionProfile;
 
@@ -31,16 +32,36 @@ public class Shoot extends CommandBase {
   double oldTime;
   double sumTime;
 
-  public Shoot() {
+  boolean button = false;
+  boolean shootFlag = false;
+  double shootingTime;
+
+  public Shoot(double shootngTime) {
+    this.shootingTime = shootingTime;
     addRequirements(Robot.shooter);
+    addRequirements(Robot.leds);
+    addRequirements(Robot.limelight);
+
+    button = false;
+    constants = new Constants();
+  }
+
+  public Shoot() {
+    shootingTime = 0;
+    button = true;
+    addRequirements(Robot.shooter);
+    addRequirements(Robot.leds);
+    addRequirements(Robot.limelight);
 
     constants = new Constants();
   }
 
   @Override
   public void initialize() {
-    rProfile = new TrapezoidalMotionProfile(constants.maxShootSpeed, 18.0, 15.0);
-    lProfile = new TrapezoidalMotionProfile(constants.maxShootSpeed, 18.0, 15.0);
+
+
+    rProfile = new TrapezoidalMotionProfile(constants.maxShootSpeed, constants.maxShootVelocity, constants.maxShootAcceleration);
+    lProfile = new TrapezoidalMotionProfile(constants.maxShootSpeed, constants.maxShootVelocity, constants.maxShootAcceleration);
 
     leftController = new ShooterLeftController(lProfile);
     rightController = new ShooterRightController(rProfile);
@@ -49,24 +70,36 @@ public class Shoot extends CommandBase {
 
     oldTime = Timer.getFPGATimestamp();
     sumTime = 0;
-
+    
     Robot.shooter.changeShootState(true);
   }
 
   @Override
   public void execute() {
-    //Robot.aiming.holdPosition();
-    leftController.update();
     rightController.update();
-    if(Robot.shooter.getRSpeed() >= 60){
-      //Robot.transporter.setPower(0.25);
+    leftController.update();
+
+    if(Robot.shooter.getRSpeed() >= constants.maxShootSpeed-Constants.allowedShooterError && Robot.shooter.getLSpeed() >= constants.maxShootSpeed-Constants.allowedShooterError){
+      shootFlag = true;
+    }
+
+    if (shootFlag ){
+      Robot.transporter.setPower(0.55);
+      Robot.intake.setPower(0.30);
+
     }
   }
 
   @Override
   public void end(boolean interrupted) {
+    shootFlag = false;
     Robot.shooter.setShootSpeed(0, 0);
     Robot.shooter.changeShootState(false);
+    Robot.intake.changeIntakeFlag(Flag.START);
+    Robot.intake.stopBalls();
+    Robot.leds.turnOFF();
+    Robot.transporter.resetBalls();
+    Robot.limelight.changePipeline(0);
   }
 
   @Override
@@ -75,6 +108,10 @@ public class Shoot extends CommandBase {
     sumTime += newTime - oldTime;
     oldTime = newTime;
     SmartDashboard.putNumber("SumTime", sumTime);
-    return sumTime >= 15;
+    if(button == true){
+      return false;
+    }else{
+      return sumTime >= shootingTime || !Robot.limelight.isTargetVisible();
+    }
   }
 }

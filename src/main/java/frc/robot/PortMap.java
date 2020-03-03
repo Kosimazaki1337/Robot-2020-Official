@@ -42,7 +42,7 @@ public class PortMap {
     public static int kPotentiometer = 0; // Analog
 
     // Transporter
-    public static int kTransportMotor = 1;
+    public static int kTransportMotor = 5;
 
     public static int kPhotoSensor = 0; // DIO
     public static int kLimitSwitch = 1; // DIO
@@ -56,3 +56,4 @@ public class PortMap {
         return kColorSensor;
     }
 }
+

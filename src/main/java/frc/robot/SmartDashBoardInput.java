@@ -17,5 +17,6 @@ public class SmartDashBoardInput {
         Robot.shooter.logs();
         Robot.aiming.logs();
         Robot.transporter.logs();
+
     }
 }

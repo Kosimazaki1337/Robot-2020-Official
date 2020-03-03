@@ -16,12 +16,15 @@ import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.PortMap;
+import frc.robot.Robot;
 
 public class Intake extends SubsystemBase {
   public WPI_VictorSPX intakeMotor;
 
   public DoubleSolenoid intakeSolenoid;
   public Compressor compressor;
+
+  private double intakeSpeed = 0.5;
 
   public enum Flag{
     START, STOP
@@ -43,12 +46,16 @@ public class Intake extends SubsystemBase {
     SmartDashboard.putNumber("intakeVolt", intakeMotor.getMotorOutputVoltage());
   }
 
-  public void intakeBalls(){
-    intakeMotor.set(ControlMode.PercentOutput, -0.6);
+  public void setPower(double speed){
+    if(Robot.transporter.isBallDown()){
+      intakeMotor.set(ControlMode.PercentOutput, speed/2.5);
+    } else {
+      intakeMotor.set(ControlMode.PercentOutput, speed);
+    }
   }
 
   public void stopBalls(){
-    intakeMotor.set(ControlMode.PercentOutput, 0);
+    intakeMotor.set(ControlMode.PercentOutput, 0.0);
   }
 
   public void intakeUp(){
@@ -69,5 +76,9 @@ public class Intake extends SubsystemBase {
 
   public void changeIntakeFlag(Flag flag){
     state = flag;
+  }
+
+  public void changeIntakeSpeed(double speed){
+    intakeSpeed = speed;
   }
 }

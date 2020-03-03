@@ -51,10 +51,10 @@ public class ShooterLeftController implements DrivetrainController {
 		double error = linearSetpoint-linearActual;
 		SmartDashboard.putNumber("linearActualLeft", linearActual);
 		double output = speedController.calculate(linearActual, linearSetpoint) + point.pos*0.01;
-		if(output > 0.75){
-			output = 0.75;
-		}else if(output < -0.75){
-			output = -0.75;
+		if(output > constants.kMaxShooterOutput){
+			output = constants.kMaxShooterOutput;
+		}else if(output < -constants.kMaxShooterOutput){
+			output = -constants.kMaxShooterOutput;
 		}
 		
 		linearError = error;

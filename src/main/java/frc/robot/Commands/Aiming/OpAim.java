@@ -9,10 +9,11 @@ package frc.robot.Commands.Aiming;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Robot;
-import frc.robot.Subsystems.Aiming;
 
 public class OpAim extends CommandBase {
-
+  /**
+   * Creates a new OpAim.
+   */
   public OpAim() {
     addRequirements(Robot.aiming);
   }
@@ -25,17 +26,12 @@ public class OpAim extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(Robot.oi.getDriverJoystick().getRawAxis(2) != 0){
-      Robot.aiming.setAimSpeed(Robot.oi.getDriverJoystick().getRawAxis(2)/1.5);
-    }else if(Robot.oi.getDriverJoystick().getRawAxis(3) != 0){
-      Robot.aiming.setAimSpeed(-Robot.oi.getDriverJoystick().getRawAxis(3)/2);
-    }else Robot.aiming.setAimSpeed(0.0);
+    Robot.aiming.opAim();
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    Robot.aiming.setAimSpeed(0.0);
   }
 
   // Returns true when the command should end.

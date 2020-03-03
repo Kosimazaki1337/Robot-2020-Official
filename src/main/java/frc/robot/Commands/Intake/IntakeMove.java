@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.Subsystems.Intake;
+import frc.robot.Subsystems.Intake.Flag;
 
 public class IntakeMove extends CommandBase {
 
@@ -35,20 +36,22 @@ public class IntakeMove extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(constants.intakeSwitch == 0){
+    if(Constants.getConstants().intakeSwitch == 0){
       Robot.intake.intakeUp();
-    }else if(constants.intakeSwitch == 1){
+      Robot.intake.changeIntakeFlag(Flag.STOP);
+    }else if(Constants.getConstants().intakeSwitch == 1){
       Robot.intake.intakeDown();
+      Robot.intake.changeIntakeFlag(Flag.START);
     }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    if(constants.intakeSwitch == 0){
-      constants.intakeSwitch = 1;
-    }else if(constants.intakeSwitch == 1){
-      constants.intakeSwitch = 0;
+    if(Constants.getConstants().intakeSwitch == 0){
+      Constants.getConstants().intakeSwitch = 1;
+    }else if(Constants.getConstants().intakeSwitch == 1){
+      Constants.getConstants().intakeSwitch = 0;
     }
   }
 

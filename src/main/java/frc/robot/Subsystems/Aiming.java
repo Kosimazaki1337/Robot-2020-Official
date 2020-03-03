@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.PortMap;
 import frc.robot.Robot;
+import frc.robot.Commands.Aiming.OpAim;
 import frc.robot.motion.SpeedPID;
 
 public class Aiming extends SubsystemBase {
@@ -49,24 +50,39 @@ public class Aiming extends SubsystemBase {
   }
 
   public void setAimSpeed(double speed){
+
+    if(speed > 0.25) {
+      speed = 0.25;
+    }else if(speed < -0.4) {
+      speed = -0.4;
+    }
+
+    double minOutputTurn = 0.05;
+    if(speed < minOutputTurn && speed >= 0){
+			speed = minOutputTurn;
+		}else if(speed > -minOutputTurn && speed <= 0){
+			speed = -minOutputTurn*2;
+		}
+
+
+    if (potentiometer.get() < 0.48 && speed > 0){
+      aimMotor.set(ControlMode.PercentOutput, -speed);
+    }else if(potentiometer.get() > 0.30 && speed < 0){
+      aimMotor.set(ControlMode.PercentOutput, -speed);
+    }else{
+      aimMotor.set(0);
+    }
+
     SmartDashboard.putNumber("aimSpeed", speed);
-    aimMotor.set(ControlMode.PercentOutput, -speed);
+    
   }
 
   public void opAim(){
-    if (Robot.oi.getDriverJoystick().getRawAxis(2) != 0){
-      Robot.aiming.setAimSpeed(Robot.oi.getDriverJoystick().getRawAxis(2)/1.5);
-    }else if (Robot.oi.getDriverJoystick().getRawAxis(3) != 0){
-      Robot.aiming.setAimSpeed(-Robot.oi.getDriverJoystick().getRawAxis(3)/2);
+    if (Robot.oi.getOperatorJoystick().getRawAxis(2) != 0){
+      Robot.aiming.setAimSpeed(Robot.oi.getOperatorJoystick().getRawAxis(2)/1.5);
+    }else if (Robot.oi.getOperatorJoystick().getRawAxis(3) != 0){
+      Robot.aiming.setAimSpeed(-Robot.oi.getOperatorJoystick().getRawAxis(3)/2);
     }else Robot.aiming.setAimSpeed(0.0);
-  }
-
-  public void checkPotentiometerPosition(){
-    if(getAngle() <= constants.maxUpPotentimeterValue){
-      stopMotor();
-    }else if(getAngle() >= constants.minDownPotentimeterValue){
-      stopMotor();
-    }
   }
 
   public double getAngle(){
@@ -76,16 +92,16 @@ public class Aiming extends SubsystemBase {
     return positionToHold;
   }
 
-  public double currentAimPosition(){
-    return getAngle();
-  }
-
   public boolean getShootingState(){
     return constants.getShootingFlag();
   }
 
+  public double getPotentometerPosition(){
+    return potentiometer.get();
+  }
+
   public void logs(){
-    SmartDashboard.putNumber("aiming_ActualPosition", getAngle());
+    SmartDashboard.putNumber("aiming_ActualPosition", potentiometer.get());
     SmartDashboard.putNumber("AimMotorPercent", aimMotor.getMotorOutputPercent());
   }
 }

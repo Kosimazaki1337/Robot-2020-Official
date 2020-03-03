@@ -99,6 +99,8 @@ public class DriveTrain extends SubsystemBase {
     if (sensorPresent != ErrorCode.OK) {
         DriverStation.reportError("Could not detect " + (invert ? "right" : "left") + " encoder: " + sensorPresent, false);
     }
+
+    //talon.setInverted();
     talon.setSensorPhase(true);
     talon.enableVoltageCompensation(true);
     talon.configVoltageCompSaturation(12.0, constants.kLongCANTimeoutMs);
@@ -118,8 +120,13 @@ public class DriveTrain extends SubsystemBase {
   }
 
   public void setSpeed(double leftSpeed, double rightSpeed){
-    lMaster.set(ControlMode.PercentOutput, leftSpeed);
-    rMaster.set(ControlMode.PercentOutput, rightSpeed);
+    lMaster.set(ControlMode.PercentOutput, leftSpeed );
+    rMaster.set(ControlMode.PercentOutput, rightSpeed );
+  }
+
+  public void setSpeedPathFinder(double leftSpeed, double rightSpeed){
+    lMaster.set(ControlMode.PercentOutput, -leftSpeed / 12);
+    rMaster.set(ControlMode.PercentOutput, rightSpeed / 12);
   }
 
   public void resetEncoders(){
@@ -140,12 +147,12 @@ public class DriveTrain extends SubsystemBase {
     getLeftSpeed(), getRightSpeed());
   }
 
-  public int getLeftDistance(){
-    return lMaster.getSelectedSensorPosition();
+  public double getLeftDistance(){
+    return (Math.PI*0.19)*(lMaster.getSelectedSensorPosition())/4096;
   }
 
-  public int getRightDistance(){
-    return rMaster.getSelectedSensorPosition();
+  public double getRightDistance(){
+    return -(Math.PI*0.19)*(rMaster.getSelectedSensorPosition())/4096;
   }
 
   public Rotation2d getHeading(){
@@ -176,12 +183,13 @@ public class DriveTrain extends SubsystemBase {
     mState = state;
   }
 
+  public double getAngle(){
+    return gyro.getAngle();
+  }
+
   public void logs() {
     SmartDashboard.putNumber("dirveTrain_leftEncoderTicks", getLeftDistance());
     SmartDashboard.putNumber("dirveTrain_rightEncoderTicks", getRightDistance());
-    SmartDashboard.putNumber("driveTrain_SlaveSpeed", lSlaveM.getMotorOutputVoltage());
-    SmartDashboard.putNumber("driveTrain_LeftSideVoltage", lMaster.getMotorOutputPercent());
-    SmartDashboard.putNumber("driveTrain_RightSideVoltage", rMaster.getMotorOutputPercent());
     SmartDashboard.putNumber("driveTrain_LeftMPS", getLeftSpeed());
     SmartDashboard.putNumber("driveTrain_RightMPS", getRightSpeed());
     SmartDashboard.putNumber("driveTrain_GyroAngle", gyro.getAngle());

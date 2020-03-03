@@ -81,10 +81,12 @@ public class Shooter extends SubsystemBase {
   }
 
   public void setLeftSpeed(double speed){
+    Robot.leds.ledShooterSpeedLeft();
     lMaster.set(ControlMode.PercentOutput, speed);
   }
 
   public void setRightSpeed(double speed){
+    Robot.leds.ledShooterSpeedRight();
     rMaster.set(ControlMode.PercentOutput, speed);
   }
 
@@ -127,8 +129,5 @@ public class Shooter extends SubsystemBase {
     SmartDashboard.putNumber("shooter_LeftEncoder", rMaster.getSelectedSensorPosition());
     SmartDashboard.putNumber("shooter_LeftRPS", getLSpeed());
     SmartDashboard.putNumber("shooter_RightRPS", getRSpeed());
-    SmartDashboard.putNumber("shooter_LeftVoltage", lMaster.getMotorOutputVoltage());
-    SmartDashboard.putNumber("shooter_RighttVoltage", rMaster.getMotorOutputVoltage());
-    SmartDashboard.putBoolean("Shoot", constants.getShootingFlag());
   }
 }

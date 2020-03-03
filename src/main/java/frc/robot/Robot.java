@@ -7,12 +7,19 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.ScheduleCommand;
+import frc.robot.Commands.Auto.AimAndShoot;
+import frc.robot.Commands.Auto.Shoot3BallsAndTake3BallsTrench;
+import frc.robot.Commands.Auto.Shoot3BallsAndTake5BallsTrench;
 import frc.robot.Subsystems.Aiming;
 import frc.robot.Subsystems.DriveTrain;
 import frc.robot.Subsystems.Intake;
@@ -22,11 +29,11 @@ import frc.robot.Subsystems.Shooter;
 import frc.robot.Subsystems.Transporter;
 
 public class Robot extends TimedRobot {
-  private static final String kDefaultAuto = "Default";
-  private static final String kCustomAuto = "My Auto";
-  private static final String kDriveStraight = "Straight";
-  private String m_autoSelected;
-  private final SendableChooser<String> m_chooser = new SendableChooser<>();
+  private static final String kDefaultAuto = "DriveStraight";
+  private static final String k3B3BT = "ShootAndTake3BallsTrench";
+  private static final String k3B5BT = "ShootAndTake5BallsTrench";
+  private static final String test = "testAuto";
+  private String autoSelected;
 
   public static OI oi;
   public static SmartDashBoardInput sdbi;
@@ -38,58 +45,97 @@ public class Robot extends TimedRobot {
   public static Intake intake;
   public static LEDState leds;
 
-  SetAutonomousCommand autonomousCommand;
+  public final SendableChooser<String> autoChooser = new SendableChooser<>();
+
+  Command setAutoCommand;
 
   @Override
   public void robotInit() {
-    m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
-    m_chooser.addOption("Lol Automatyka XD", kCustomAuto);
-    m_chooser.addOption("Drive Straight", kDriveStraight);
-    SmartDashboard.putData("AutoChoices", m_chooser);
-    
+    autoChooser.setDefaultOption("DefaultDrive", kDefaultAuto);
+    autoChooser.addOption("ShootAndTake3BallsTrench", k3B3BT);
+    autoChooser.addOption("ShootAndTake5BallsTrench", k3B5BT);
+    autoChooser.addOption("TestAuto", test);
+
+
     initSubsystems();
     oi = new OI();
     sdbi = new SmartDashBoardInput();
-    autonomousCommand = new SetAutonomousCommand();
+    limelight.setMode(3);
+    SmartDashboard.putData(autoChooser);
   }
 
   @Override
   public void robotPeriodic() {
+    targetVsible();
     sdbi.logs();
     CommandScheduler.getInstance().run();
     leds.periodic();
-    m_autoSelected = m_chooser.getSelected();
-    m_autoSelected = SmartDashboard.getString("AutoSelector", kDefaultAuto);
+
+    SmartDashboard.putNumber("BatteryVoltage", RobotController.getBatteryVoltage());
+    RobotController.getCANStatus();
   }
 
   @Override
   public void autonomousInit() {
-    
-    SmartDashboard.putString("SelectedMode: " , m_autoSelected);
+    autoSelected = SmartDashboard.getString("AutoSelected", test);
 
-    autonomousCommand.getAutonomousCommand().schedule();
+    switch (autoSelected) {
+      case k3B3BT:
+        setAutoCommand = new Shoot3BallsAndTake3BallsTrench();
+        setAutoCommand = new SetPathToDrive().goBehindTrench();
+        setAutoCommand.schedule();
+        break;
+      case k3B5BT:
+        setAutoCommand = new Shoot3BallsAndTake5BallsTrench();
+        setAutoCommand.schedule();
+        break;
+      case test:
+        setAutoCommand = new AimAndShoot();
+        setAutoCommand.schedule();
+        SmartDashboard.putNumber("AutonomousCase", 1);
+      case kDefaultAuto:
+      default:
+        setAutoCommand = new AimAndShoot();
+        setAutoCommand.schedule();
+        SmartDashboard.putNumber("AutonomousCase", 1);
+        break;
+    }
+    
   }
 
   @Override
   public void autonomousPeriodic() {
-    switch (m_autoSelected) {
-      case kCustomAuto:
-        // Put custom auto code here
-        break;
-      case kDefaultAuto:
-      default:
-        // Put default auto code here
-        break;
-    }
+    CommandScheduler.getInstance().run();
+    SmartDashboard.putString("AutoMode", autoSelected);
+  }
+
+  @Override
+  public void teleopInit() {
+    driveTrain.stopAndReset();
   }
 
   @Override
   public void teleopPeriodic() {
+   //leds.blink();
+   leds.teleopLeds();
     Scheduler.getInstance().run();
   }
 
   @Override
   public void testPeriodic() {
+    leds.checkSystems();
+    driveTrain.setSpeed(0, 0);
+    transporter.setPower(0);
+    aiming.setAimSpeed(0);
+    shooter.setShootSpeed(0, 0);
+  }
+
+  public void targetVsible(){
+    if(Robot.limelight.isTargetVisible()){
+      Robot.leds.setLedColorLED(Color.kGreen);
+    }else{
+      Robot.leds.setLedColorLED(Color.kBlack);
+    }
   }
 
   public void initSubsystems(){

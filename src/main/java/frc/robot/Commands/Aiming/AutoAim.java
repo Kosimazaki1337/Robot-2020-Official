@@ -29,8 +29,8 @@ public class AutoAim extends CommandBase {
   @Override
   public void initialize() {
     positionToHold = Robot.aiming.getAngle();
-    aimPID = new SpeedPID(0.15, 0.007, 0.01, 0.0015, 0.9, -0.9);
-    SmartDashboard.putNumber("Test", 1);
+    aimPID = new SpeedPID(0.183, 0.00923, 0.0038, 0.00115, 0.4, -0.4);
+    aimPID.reset();
   }
 
   // Called every time the scheduler runs while the command is scheduled.

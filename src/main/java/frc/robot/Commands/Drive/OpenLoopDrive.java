@@ -17,7 +17,7 @@ import frc.robot.motion.SpeedPID;
 public class OpenLoopDrive extends CommandBase {
   
   private PIDController leftController;
-  private PIDController righController;
+  private PIDController rightController;
 
   private SpeedPID speedPIDLeft, speedPIDRight;
 
@@ -35,18 +35,19 @@ public class OpenLoopDrive extends CommandBase {
     constants.kLongCANTimeoutSec);
     leftController.setTolerance(constants.openLoopErrorTolerance);
 
-    righController = new PIDController(constants.openLoopkPRight,
+    rightController = new PIDController(constants.openLoopkPRight,
     constants.openLoopkIRight, constants.openLoopkDRight,
     constants.kLongCANTimeoutSec);
-    righController.setTolerance(constants.openLoopErrorTolerance);
+    rightController.setTolerance(constants.openLoopErrorTolerance);
 
+    Robot.limelight.changePipeline(0);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    speedPIDLeft = new SpeedPID(0.1, 0.001, 0.0, 0.0);
-    speedPIDRight = new SpeedPID(0.1, 0.001, 0.0, 0.0);
+    leftController.reset();
+    rightController.reset();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -55,7 +56,9 @@ public class OpenLoopDrive extends CommandBase {
     double speedV = Robot.oi.getDriverJoystick().getRawAxis(1);
     double turnV = Robot.oi.getDriverJoystick().getRawAxis(4);
 
-    if (Math.abs(speedV) > constants.joyDeadZone || Math.abs(turnV) > constants.joyDeadZone) {
+    SmartDashboard.putBoolean("ShootingInDrive", Robot.shooter.getShootState());
+
+    if ((Math.abs(speedV) > constants.joyDeadZone || Math.abs(turnV) > constants.joyDeadZone) && !Robot.shooter.getShootState()) {
       
       //drive.setSpeed(speedV - turnV, speedV + turnV);
 
@@ -77,9 +80,9 @@ public class OpenLoopDrive extends CommandBase {
         }
       }
       Robot.driveTrain.setSpeed(leftController.calculate(Robot.driveTrain.getLeftSpeed(), leftSpeed*4),
-      righController.calculate(-Robot.driveTrain.getRightSpeed(), -rightSpeed*4));
-      SmartDashboard.putNumber("leftSpeed", leftController.calculate(Robot.driveTrain.getLeftSpeed(), leftSpeed*4));
-      SmartDashboard.putNumber("rightSpeed", -rightSpeed);
+      rightController.calculate(-Robot.driveTrain.getRightSpeed(), -rightSpeed*4));
+      SmartDashboard.putNumber("leftSpeed", leftSpeed*4);
+      SmartDashboard.putNumber("rightSpeed", -rightSpeed*4);
       }else{
         Robot.driveTrain.setSpeed(0.0, 0.0);
     }
