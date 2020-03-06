@@ -7,10 +7,12 @@
 
 package frc.robot.Commands.Aiming;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.Controllers.TurnController;
+import frc.robot.Subsystems.LEDState.StateLedFlag;
 import frc.robot.motion.TrapezoidalMotionProfile;
 
 public class TrapezTurnToTarget extends CommandBase {
@@ -31,6 +33,7 @@ public class TrapezTurnToTarget extends CommandBase {
     addRequirements(Robot.limelight);
     addRequirements(Robot.aiming);
     addRequirements(Robot.driveTrain);
+    addRequirements(Robot.leds);
   }
 
   // Called when the command is initially scheduled.
@@ -38,7 +41,7 @@ public class TrapezTurnToTarget extends CommandBase {
   public void initialize() {
     Robot.limelight.changePipeline(pipeline);
 
-    //Robot.limelight.setMode(3);
+    SmartDashboard.putNumber("AimAndShoot", 4);
     
     xOffset = Robot.limelight.getXOffset();
     yOffset = Robot.limelight.getYOffset();
@@ -62,6 +65,8 @@ public class TrapezTurnToTarget extends CommandBase {
     xOffset = Robot.limelight.getXOffset();
     yOffset = Robot.limelight.getYOffset();
 
+    Robot.leds.changeLedState(StateLedFlag.TRAPEZ_GOING);
+
       controller.update();
 
   }
@@ -69,18 +74,21 @@ public class TrapezTurnToTarget extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    SmartDashboard.putNumber("AimAndShoot", 6);
     Robot.driveTrain.setSpeed(0.0, 0.0);
     if(pipeline == 0){
       Robot.limelight.changePipeline(1);
     } else if (pipeline == 1){
       Robot.limelight.changePipeline(0);
     }
+    Robot.leds.changeLedState(StateLedFlag.TRAPEZ_FINISHED);
 
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    SmartDashboard.putNumber("AimAndShoot", 5);
     return Math.abs(xOffset) <= Math.abs(allowedError);
   }
 }

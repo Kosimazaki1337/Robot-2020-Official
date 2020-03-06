@@ -15,13 +15,13 @@ import frc.robot.Commands.Shooter.Shoot;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/latest/docs/software/commandbased/convenience-features.html
-public class AutoShoot extends SequentialCommandGroup {
+public class AutoShoot extends ParallelCommandGroup {
   /**
    * Creates a new AutoTest.
    */
   public AutoShoot() {
     // Add your commands in the super() call, e.g.
     // super(new FooCommand(), new BarCommand());
-    super(new ParallelCommandGroup(new Shoot(5), new AutoAim()));
+    super(new Shoot(5), new AutoAim());
   }
 }

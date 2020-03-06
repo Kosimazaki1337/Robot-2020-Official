@@ -29,11 +29,18 @@ public class LEDState extends SubsystemBase {
     FULL_TRANSPORTER,
     SHOOTER_STARTING,
     SHOOTING,
+    SHOOTING_END,
     RAINBOW,
     TELEOP_INIT,
     AUTO_INIT,
     ENDGAME_START,
     GAME,
+    TRAPEZ_GOING,
+    TRAPEZ_FINISHED,
+    AUTO_AIM,
+    STANDARD,
+    INTAKE_DOWN,
+    SET_AIMING_POSITION,
     TRANSPORTER_HALF_FULL;
 	} 
 
@@ -61,7 +68,39 @@ public class LEDState extends SubsystemBase {
 
   @Override
   public void periodic() {
-    //switch()
+    switch(LedFlag){
+      case TARGET_VISIBLE:
+        setColor(Color.kGreen);
+        break;
+      case SHOOTING:
+        setColor(Color.kViolet);
+        break;
+      case SHOOTING_END:
+        setColor(Color.kDarkViolet);
+        break;
+      case TRAPEZ_GOING:
+        setColor(Color.kRosyBrown);
+        break;
+      case TRAPEZ_FINISHED:
+        setColor(Color.kBrown);
+        break;
+      case AUTO_AIM:
+        setColor(Color.kDarkCyan);
+        break;
+      case AIMED:
+        setColor(Color.kCyan);
+        break;
+      case INTAKE_DOWN:
+        setColor(Color.kOrange);
+        break;
+      case SET_AIMING_POSITION:
+        setColor(Color.kYellow);
+        break;
+      case STANDARD:
+      default:
+        setColor(Color.kBlack);
+        break;
+    }
   }
 
   public void changeLedState(StateLedFlag stateLedFlag){

@@ -8,10 +8,12 @@
 package frc.robot.Commands.Aiming;
 
 import edu.wpi.first.wpilibj.controller.PIDController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
+import frc.robot.Subsystems.LEDState.StateLedFlag;
 
 public class AimToTarget extends CommandBase {
   
@@ -31,6 +33,7 @@ public class AimToTarget extends CommandBase {
   public void initialize() {
     Robot.limelight.changePipeline(0);
     controller = new PIDController(0.076, 0.045, 0.0006);
+    SmartDashboard.putNumber("AimAndShoot", 7);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -38,6 +41,7 @@ public class AimToTarget extends CommandBase {
   public void execute() {
     yOffset = Robot.limelight.getYOffset();
     error = target - yOffset;
+    Robot.leds.changeLedState(StateLedFlag.AUTO_AIM);
 
     Robot.aiming.setAimSpeed(controller.calculate(yOffset, target));
   }
@@ -46,16 +50,19 @@ public class AimToTarget extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     Robot.aiming.setAimSpeed(0.0);
+    Robot.leds.changeLedState(StateLedFlag.AIMED);
     if(Math.abs(error) < Math.abs(Constants.kYAllowedError)){
-        Robot.leds.setLedColorLED(Color.kBlue);
+      Robot.leds.changeLedState(StateLedFlag.AIMED);
     }
 
     Robot.aiming.setpositionToHold2();
+    SmartDashboard.putNumber("AimAndShoot", 9);
   }
 
   // Returns true when the command should end.
   @Override
-  public boolean isFinished() {
+  public boolean isFinished() {   
+    SmartDashboard.putNumber("AimAndShoot", 8);
 
     return Math.abs(error) < Math.abs(Constants.kYAllowedError);
   }

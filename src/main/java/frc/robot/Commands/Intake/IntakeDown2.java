@@ -7,8 +7,10 @@
 
 package frc.robot.Commands.Intake;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Robot;
+import frc.robot.Subsystems.LEDState.StateLedFlag;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
@@ -16,11 +18,14 @@ import frc.robot.Robot;
 public class IntakeDown2 extends InstantCommand {
   public IntakeDown2() {
     addRequirements(Robot.intake);
+    addRequirements(Robot.leds);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
     Robot.intake.intakeDown();
+    SmartDashboard.putNumber("AimAndShoot", 0);
+    Robot.leds.changeLedState(StateLedFlag.INTAKE_DOWN);
   }
 }

@@ -10,7 +10,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Commands.Aiming.AimSequence;
-import frc.robot.Commands.Aiming.SetAimingDown;
+import frc.robot.Commands.Aiming.SetAimingPosition;
 import frc.robot.Commands.Auto.AutoShoot;
 import frc.robot.Commands.Drive.OpenLoopDrive;
 import frc.robot.Commands.Intake.IntakeBalls;
@@ -41,7 +41,7 @@ public class OI {
         shootAutoAim.whenPressed(new AimSequence());
 
         setAimDown = new JoystickButton(operator, 2);
-        setAimDown.whenPressed(new SetAimingDown(false));
+        setAimDown.whenPressed(new SetAimingPosition(false));
 
         intakeBalls = new JoystickButton(driver, 6);
         intakeBalls.whileHeld(new IntakeBalls());

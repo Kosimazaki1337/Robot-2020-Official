@@ -18,6 +18,7 @@ public class Shoot3BallsAndTake5BallsTrench extends SequentialCommandGroup {
    */
   public Shoot3BallsAndTake5BallsTrench() {
     super(
+      
       new AimAndShoot(),
       new ParallelCommandGroup(new IntakeBalls(), new SetPathToDrive().goBehindTrench(false)),
       new SetPathToDrive().goBehindTrench(true),

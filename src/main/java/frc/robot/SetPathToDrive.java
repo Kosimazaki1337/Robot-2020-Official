@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.controller.RamseteController;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
@@ -61,6 +62,7 @@ public class SetPathToDrive {
         Robot.driveTrain.getLeftPidController(), Robot.driveTrain.getRightPidController(),
         Robot.driveTrain::setSpeedPathFinder, Robot.driveTrain);
 
+        SmartDashboard.putNumber("PathFinder", 0);
         return follow;
     }
 }

@@ -15,6 +15,7 @@ import frc.robot.Robot;
 import frc.robot.Controllers.ShooterLeftController;
 import frc.robot.Controllers.ShooterRightController;
 import frc.robot.Subsystems.Intake.Flag;
+import frc.robot.Subsystems.LEDState.StateLedFlag;
 import frc.robot.motion.SpeedPID;
 import frc.robot.motion.TrapezoidalMotionProfile;
 
@@ -72,34 +73,39 @@ public class Shoot extends CommandBase {
     sumTime = 0;
     
     Robot.shooter.changeShootState(true);
+    SmartDashboard.putNumber("AimAndShoot", 10);
+    Robot.leds.changeLedState(StateLedFlag.SHOOTING);
   }
 
   @Override
   public void execute() {
-    rightController.update();
-    leftController.update();
+    // rightController.update();
+    // leftController.update();
 
-    if(Math.abs(Robot.shooter.getRSpeed()) >= Math.abs(constants.maxShootSpeed-Constants.allowedShooterError) && Math.abs(Robot.shooter.getLSpeed()) >= Math.abs(constants.maxShootSpeed-Constants.allowedShooterError)){
-      Robot.shooter.changeShootState(true);
-      Robot.intake.setPower(0.30);
-    } else if((Robot.shooter.getRSpeed() == 0 || Robot.shooter.getLSpeed() == 0) && (Math.abs(Robot.shooter.getRSpeed()) >= Math.abs(constants.maxShootSpeed-Constants.allowedShooterError) || Math.abs(Robot.shooter.getLSpeed()) >= Math.abs(constants.maxShootSpeed-Constants.allowedShooterError))){
-      Robot.shooter.changeShootState(true);
-      Robot.intake.setPower(0.30);
-    }else {
-      Robot.shooter.changeShootState(false);
-    }
+    // if(Math.abs(Robot.shooter.getRSpeed()) >= Math.abs(constants.maxShootSpeed-Constants.allowedShooterError) && Math.abs(Robot.shooter.getLSpeed()) >= Math.abs(constants.maxShootSpeed-Constants.allowedShooterError)){
+    //   Robot.shooter.changeShootState(true);
+    //   Robot.intake.setPower(0.30);
+    // } else if((Robot.shooter.getRSpeed() == 0 || Robot.shooter.getLSpeed() == 0) && (Math.abs(Robot.shooter.getRSpeed()) >= Math.abs(constants.maxShootSpeed-Constants.allowedShooterError) || Math.abs(Robot.shooter.getLSpeed()) >= Math.abs(constants.maxShootSpeed-Constants.allowedShooterError))){
+    //   Robot.shooter.changeShootState(true);
+    //   Robot.intake.setPower(0.30);
+    // }else {
+    //   Robot.shooter.changeShootState(false);
+    // }
+
   }
 
   @Override
   public void end(boolean interrupted) {
-    shootFlag = false;
-    Robot.shooter.setShootSpeed(0, 0);
-    Robot.shooter.changeShootState(false);
-    Robot.intake.changeIntakeFlag(Flag.START);
-    Robot.intake.stopBalls();
-    Robot.leds.turnOFF();
-    Robot.transporter.resetBalls();
-    Robot.limelight.changePipeline(0);
+    // shootFlag = false;
+    // Robot.shooter.setShootSpeed(0, 0);
+    // Robot.shooter.changeShootState(false);
+    // Robot.intake.changeIntakeFlag(Flag.START);
+    // Robot.intake.stopBalls();
+    // Robot.leds.turnOFF();
+    // Robot.transporter.resetBalls();
+    // Robot.limelight.changePipeline(0);
+    SmartDashboard.putNumber("AimAndShoot2", 12);
+    Robot.leds.changeLedState(StateLedFlag.SHOOTING_END);
   }
 
   @Override
@@ -107,11 +113,12 @@ public class Shoot extends CommandBase {
     double newTime = Timer.getFPGATimestamp();
     sumTime += newTime - oldTime;
     oldTime = newTime;
-    SmartDashboard.putNumber("SumTime", sumTime);
-    if(button == true){
-      return false;
-    }else{
+  //   SmartDashboard.putNumber("SumTime", sumTime);
+  //   if(button == true){
+  //     return false;
+  //   }else{
+    SmartDashboard.putNumber("AimAndShoot2", 11);
       return sumTime >= shootingTime || !Robot.limelight.isTargetVisible();
-    }
+  //   }
   }
 }
