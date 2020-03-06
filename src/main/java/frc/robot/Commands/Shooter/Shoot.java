@@ -79,14 +79,14 @@ public class Shoot extends CommandBase {
     rightController.update();
     leftController.update();
 
-    if(Robot.shooter.getRSpeed() >= constants.maxShootSpeed-Constants.allowedShooterError && Robot.shooter.getLSpeed() >= constants.maxShootSpeed-Constants.allowedShooterError){
-      shootFlag = true;
-    }
-
-    if (shootFlag ){
-      Robot.transporter.setPower(0.55);
+    if(Math.abs(Robot.shooter.getRSpeed()) >= Math.abs(constants.maxShootSpeed-Constants.allowedShooterError) && Math.abs(Robot.shooter.getLSpeed()) >= Math.abs(constants.maxShootSpeed-Constants.allowedShooterError)){
+      Robot.shooter.changeShootState(true);
       Robot.intake.setPower(0.30);
-
+    } else if((Robot.shooter.getRSpeed() == 0 || Robot.shooter.getLSpeed() == 0) && (Math.abs(Robot.shooter.getRSpeed()) >= Math.abs(constants.maxShootSpeed-Constants.allowedShooterError) || Math.abs(Robot.shooter.getLSpeed()) >= Math.abs(constants.maxShootSpeed-Constants.allowedShooterError))){
+      Robot.shooter.changeShootState(true);
+      Robot.intake.setPower(0.30);
+    }else {
+      Robot.shooter.changeShootState(false);
     }
   }
 

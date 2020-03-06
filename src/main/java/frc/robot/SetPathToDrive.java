@@ -28,13 +28,14 @@ public class SetPathToDrive {
         constants = new Constants();
     }
 
-    public Command goFrontTrench() {
+    public Command goFrontTrench(boolean reversed) {
         TrajectoryConfig config = new TrajectoryConfig(constants.maxVelocityMetersPerSecond,
         constants.maxAccelerationMetersPerSecondSqr);
         config.setKinematics(Robot.driveTrain.getKinematics());
+        config.setReversed(reversed);
 
         Trajectory trajectory = TrajectoryGenerator.generateTrajectory(Arrays.asList(new Pose2d(),
-        new Pose2d(3, 3, new Rotation2d().fromDegrees(0))), config);
+        new Pose2d(5, 0, new Rotation2d().fromDegrees(0))), config);
 
         RamseteCommand follow = new RamseteCommand(trajectory, Robot.driveTrain::getPose,
         new RamseteController(constants.kRamseteTuningB, constants.kRamseteTuningZeta),
@@ -45,13 +46,14 @@ public class SetPathToDrive {
         return follow;
     }
 
-    public Command goBehindTrench() {
+    public Command goBehindTrench(boolean reversed) {
         TrajectoryConfig config = new TrajectoryConfig(constants.maxVelocityMetersPerSecond,
         constants.maxAccelerationMetersPerSecondSqr);
         config.setKinematics(Robot.driveTrain.getKinematics());
+        config.setReversed(reversed);
 
         Trajectory trajectory = TrajectoryGenerator.generateTrajectory(Arrays.asList(new Pose2d(),
-        new Pose2d(2.2, 1.7, new Rotation2d(0) ), new Pose2d(4.2, 1.7, new Rotation2d(0)), new Pose2d(9.5, 2.0, new Rotation2d(0))), config);
+        new Pose2d(2.2, 1.7, new Rotation2d(0)), new Pose2d(4.2, 1.7, new Rotation2d(0)), new Pose2d(9.5, 2.0, new Rotation2d(0))), config);
 
         RamseteCommand follow = new RamseteCommand(trajectory, Robot.driveTrain::getPose,
         new RamseteController(constants.kRamseteTuningB, constants.kRamseteTuningZeta),

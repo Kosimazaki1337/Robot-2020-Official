@@ -39,6 +39,7 @@ public class Intake extends SubsystemBase {
 
     intakeSolenoid = new DoubleSolenoid(PortMap.kIntakeSolenoidA, PortMap.kIntakeSolenoidB);
     compressor = new Compressor();
+    //compressor.stop();
   }
 
   @Override

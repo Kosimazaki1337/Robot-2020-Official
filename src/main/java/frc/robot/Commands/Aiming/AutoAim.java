@@ -28,19 +28,27 @@ public class AutoAim extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    positionToHold = Robot.aiming.getAngle();
-    aimPID = new SpeedPID(0.183, 0.00923, 0.0038, 0.00115, 0.4, -0.4);
-    aimPID.reset();
+    // positionToHold = Robot.aiming.getAngle();
+    // aimPID = new SpeedPID(0.183, 0.00923, 0.0038, 0.00115, 0.4, -0.4);
+    // aimPID.reset();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double actualPosition = Robot.aiming.getAngle();
-    SmartDashboard.putNumber("HoldPosition", positionToHold);
-    SmartDashboard.putNumber("actualPotentiometer", actualPosition);
-    Robot.aiming.setAimSpeed(aimPID.calculate(positionToHold, actualPosition));
-    SmartDashboard.putNumber("Test", 2);
+    double actualPosition = Robot.aiming.getPotentometerPosition();
+
+    double setPoint = Robot.aiming.getPositionToHold2();
+
+    if(actualPosition > setPoint){
+      double error = actualPosition - setPoint;
+      Robot.aiming.setAimSpeed(-error * Constants.getConstants().aimingkP);
+    }
+
+    // SmartDashboard.putNumber("HoldPosition", positionToHold);
+    // SmartDashboard.putNumber("actualPotentiometer", actualPosition);
+    // Robot.aiming.setAimSpeed(aimPID.calculate(positionToHold, actualPosition));
+    // SmartDashboard.putNumber("Test", 2);
   }
 
   // Called once the command ends or is interrupted.

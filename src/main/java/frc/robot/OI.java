@@ -41,12 +41,12 @@ public class OI {
         shootAutoAim.whenPressed(new AimSequence());
 
         setAimDown = new JoystickButton(operator, 2);
-        setAimDown.whenPressed(new SetAimingDown());
+        setAimDown.whenPressed(new SetAimingDown(false));
 
         intakeBalls = new JoystickButton(driver, 6);
         intakeBalls.whileHeld(new IntakeBalls());
 
-        intakeMove = new JoystickButton(driver, 4);
+        intakeMove = new JoystickButton(operator, 4);
         intakeMove.whenPressed(new IntakeMove());
 
         shootTeleop = new JoystickButton(operator, 3);

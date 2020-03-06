@@ -51,8 +51,8 @@ public class Constants {
     public static final double kI = 0.0;
     public static final double kD = 0.0;
 
-    public static final double maxVelocityMetersPerSecond = 2.0;
-    public static final double maxAccelerationMetersPerSecondSqr = 1;
+    public final double maxVelocityMetersPerSecond = 0.1;
+    public final double maxAccelerationMetersPerSecondSqr = 0.01;
     public static final double kRamseteTuningB = 2;
     public static final double kRamseteTuningZeta = 0.7;
 
@@ -79,9 +79,7 @@ public class Constants {
 
     public static final double kMaxShooterOutput = 0.95;
 
-
     public static final double allowedShooterError = 7.5;
-
 
     //Transporter Constants
     public static final double sparkTicksToMove = 4;
@@ -103,7 +101,7 @@ public class Constants {
     public static double maxUpPotentimeterValue = 0.30;
     public static double minDownPotentimeterValue = 0.48;
 
-    public static double aimingkP = 0;
+    public static double aimingkP = 1.12358132134;
     public static double aimingkI = 0;
     public static double aimingkD = 0;
 
@@ -136,7 +134,7 @@ public class Constants {
     public static final double yAmingTargetAngle = -20.0;
 
     //turn controller
-    public static final double minOutputTurn = 0.26;
+    public static final double minOutputTurn = 0.24;
     
     public String getGameData() {
         return gameData;

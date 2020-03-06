@@ -7,7 +7,12 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.DriverStation;
+import org.opencv.core.Mat;
+
+import edu.wpi.cscore.CvSink;
+import edu.wpi.cscore.CvSource;
+import edu.wpi.cscore.UsbCamera;
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -16,7 +21,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 import frc.robot.Commands.Auto.AimAndShoot;
 import frc.robot.Commands.Auto.Shoot3BallsAndTake3BallsTrench;
 import frc.robot.Commands.Auto.Shoot3BallsAndTake5BallsTrench;
@@ -47,6 +51,8 @@ public class Robot extends TimedRobot {
 
   public final SendableChooser<String> autoChooser = new SendableChooser<>();
 
+  private UsbCamera camera;
+
   Command setAutoCommand;
 
   @Override
@@ -56,6 +62,24 @@ public class Robot extends TimedRobot {
     autoChooser.addOption("ShootAndTake5BallsTrench", k3B5BT);
     autoChooser.addOption("TestAuto", test);
 
+    new Thread(() -> {
+        camera = CameraServer.getInstance().startAutomaticCapture(0);
+        camera.setResolution(160, 120);
+        CvSink cvSink = CameraServer.getInstance().getVideo();
+        ;CvSource outputStream = CameraServer.getInstance().putVideo("Intake", 160, 120);
+
+
+        Mat mat = new Mat();
+
+        while(!Thread.interrupted()){
+          if(cvSink.grabFrame(mat) == 0){
+            outputStream.notifyError(cvSink.getError());
+            continue;
+          }
+
+          outputStream.putFrame(mat);
+        }
+    }).start();
 
     initSubsystems();
     oi = new OI();
@@ -82,8 +106,8 @@ public class Robot extends TimedRobot {
     switch (autoSelected) {
       case k3B3BT:
         setAutoCommand = new Shoot3BallsAndTake3BallsTrench();
-        setAutoCommand = new SetPathToDrive().goBehindTrench();
         setAutoCommand.schedule();
+        SmartDashboard.putNumber("AutonomousCase", 3);
         break;
       case k3B5BT:
         setAutoCommand = new Shoot3BallsAndTake5BallsTrench();
@@ -92,12 +116,9 @@ public class Robot extends TimedRobot {
       case test:
         setAutoCommand = new AimAndShoot();
         setAutoCommand.schedule();
-        SmartDashboard.putNumber("AutonomousCase", 1);
+        SmartDashboard.putNumber("AutonomousCase", 2);
       case kDefaultAuto:
       default:
-        setAutoCommand = new AimAndShoot();
-        setAutoCommand.schedule();
-        SmartDashboard.putNumber("AutonomousCase", 1);
         break;
     }
     

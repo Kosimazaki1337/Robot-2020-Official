@@ -7,13 +7,21 @@
 
 package frc.robot.Commands.Auto;
 
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.SetPathToDrive;
+import frc.robot.Commands.Intake.IntakeBalls;
 
 public class Shoot3BallsAndTake5BallsTrench extends SequentialCommandGroup {
   /**
    * Creates a new Shoot3BallsAndTake5BallsTrench.
    */
   public Shoot3BallsAndTake5BallsTrench() {
-    super();
+    super(
+      new AimAndShoot(),
+      new ParallelCommandGroup(new IntakeBalls(), new SetPathToDrive().goBehindTrench(false)),
+      new SetPathToDrive().goBehindTrench(true),
+      new AimAndShoot()
+    );
   }
 }

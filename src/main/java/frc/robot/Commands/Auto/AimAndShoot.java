@@ -7,9 +7,12 @@
 
 package frc.robot.Commands.Auto;
 
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Commands.Aiming.AimSequence;
+import frc.robot.Commands.Aiming.SetAimingDown;
 import frc.robot.Commands.Intake.IntakeDown;
+import frc.robot.Commands.Intake.IntakeDown2;
 
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
@@ -20,6 +23,11 @@ public class AimAndShoot extends SequentialCommandGroup {
    * Creates a new AimAndShoot.
    */
   public AimAndShoot() {
-    super(new SequentialCommandGroup(new IntakeDown(), new AimSequence(), new AutoShoot()));
+    super(
+      new ParallelCommandGroup(new IntakeDown2(), new SetAimingDown(true)), 
+      new AimSequence(), 
+      new AutoShoot()
+      
+    );
   }
 }

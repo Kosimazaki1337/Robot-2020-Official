@@ -81,6 +81,6 @@ public class TrapezTurnToTarget extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Math.abs(xOffset) <= Math.abs(allowedError) || !Robot.limelight.isTargetVisible();
+    return Math.abs(xOffset) <= Math.abs(allowedError);
   }
 }

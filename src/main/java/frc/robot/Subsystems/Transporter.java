@@ -66,36 +66,40 @@ public class Transporter extends SubsystemBase {
 
   @Override
   public void periodic() { 
+    double output = 0;
 
-
-    if(isTransorterFull()){
-    Robot.limelight.setMode(3);
-    }
+    // if(isTransorterFull()){
+    //   Robot.limelight.setMode(3);
+    // }
 
     if(!isTransorterFull()){
       if(ultrasonic.getRangeMM()/10 < 25.0){
-        if(countBalls > 2){
-          transportMotor.set(constants.twoBallsSpeedTransporter);
-        }else{
-          transportMotor.set(constants.twoBallsSpeedTransporter);
-        }
-        if(!flag){
-          countBalls++;
-          flag = !flag;
-        }
+          output = Constants.getConstants().twoBallsSpeedTransporter;
       }else{
-        joyControl();
-        flag = !flag;
+          output = 0;
       }
     }else{
-      joyControl();
+      output = 0;
     }
-    SmartDashboard.putNumber("Balls", countBalls);
-    //joyControl();
+
+    if(Robot.shooter.getShootState()){
+      output = 0.55;
+    }
+
+    if(Robot.oi.getOperatorJoystick().getRawAxis(5) > 0.2){
+      output = -Robot.oi.getOperatorJoystick().getRawAxis(5)/0.6;
+    }
+
+    if(Robot.oi.getOperatorJoystick().getRawAxis(5) < -0.2){
+      output = -Robot.oi.getOperatorJoystick().getRawAxis(5)/0.6;
+    }
 
     if(Robot.intake.getIntakeFlag() == Flag.STOP){
       transportMotor.set(0.0);
+    } else {
+      transportMotor.set(output);
     }
+
   }
 
 

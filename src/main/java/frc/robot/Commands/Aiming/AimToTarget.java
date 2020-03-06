@@ -49,11 +49,14 @@ public class AimToTarget extends CommandBase {
     if(Math.abs(error) < Math.abs(Constants.kYAllowedError)){
         Robot.leds.setLedColorLED(Color.kBlue);
     }
+
+    Robot.aiming.setpositionToHold2();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Math.abs(error) < Math.abs(Constants.kYAllowedError) || !Robot.limelight.isTargetVisible();
+
+    return Math.abs(error) < Math.abs(Constants.kYAllowedError);
   }
 }

@@ -5,28 +5,22 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.Commands.Aiming;
+package frc.robot.Commands.Intake;
 
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.Constants;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.Robot;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/latest/docs/software/commandbased/convenience-features.html
-public class AimSequence extends SequentialCommandGroup {
-  /**
-   * Creates a new AimSequence.
-   */
-  public AimSequence() {
-    // super(new FooCommand(), new BarCommand());
+public class IntakeDown2 extends InstantCommand {
+  public IntakeDown2() {
+    addRequirements(Robot.intake);
+  }
 
-    super(
-      new TrapezTurnToTarget(0, 0.8), 
-      
-      new AimToTarget(Constants.yAmingTargetAngle)
-    );
-    
-    //super();
+  // Called when the command is initially scheduled.
+  @Override
+  public void initialize() {
+    Robot.intake.intakeDown();
   }
 }

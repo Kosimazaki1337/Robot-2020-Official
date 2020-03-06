@@ -25,6 +25,10 @@ public class Aiming extends SubsystemBase {
   private SpeedPID aimPID;
 
   private double positionToHold = 0;
+
+  private double positionToHold2 = 0;
+
+
   Constants constants;
 
   public Aiming(){
@@ -53,15 +57,16 @@ public class Aiming extends SubsystemBase {
 
     if(speed > 0.25) {
       speed = 0.25;
-    }else if(speed < -0.4) {
-      speed = -0.4;
+    }else if(speed < -0.6) {
+      speed = -0.6;
     }
 
+    double multipler = 1.1;
     double minOutputTurn = 0.05;
     if(speed < minOutputTurn && speed >= 0){
 			speed = minOutputTurn;
 		}else if(speed > -minOutputTurn && speed <= 0){
-			speed = -minOutputTurn*2;
+			speed = -minOutputTurn*multipler;
 		}
 
 
@@ -103,5 +108,13 @@ public class Aiming extends SubsystemBase {
   public void logs(){
     SmartDashboard.putNumber("aiming_ActualPosition", potentiometer.get());
     SmartDashboard.putNumber("AimMotorPercent", aimMotor.getMotorOutputPercent());
+  }
+
+  public void setpositionToHold2(){
+    positionToHold2 = getPotentometerPosition();
+  }
+
+  public double getPositionToHold2(){
+    return positionToHold2;
   }
 }

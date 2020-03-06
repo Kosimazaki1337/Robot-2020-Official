@@ -7,18 +7,18 @@
 
 package frc.robot.Commands.Auto;
 
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.SetPathToDrive;
+import frc.robot.Commands.Intake.IntakeBalls;
 
-// NOTE:  Consider using this command inline, rather than writing a subclass.  For more
-// information, see:
-// https://docs.wpilib.org/en/latest/docs/software/commandbased/convenience-features.html
 public class Shoot3BallsAndTake3BallsTrench extends SequentialCommandGroup {
-  /**
-   * Creates a new Shoot3BallsAndTake3BallsTrench.
-   */
+
   public Shoot3BallsAndTake3BallsTrench() {
-    // Add your commands in the super() call, e.g.
-    // super(new FooCommand(), new BarCommand());
-    super();
+  super(
+    new AimAndShoot(),
+    new ParallelCommandGroup(new IntakeBalls(), new SetPathToDrive().goFrontTrench(false)),
+    new SetPathToDrive().goFrontTrench(true),
+    new AimAndShoot());
   }
 }

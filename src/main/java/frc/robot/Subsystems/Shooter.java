@@ -28,7 +28,7 @@ public class Shooter extends SubsystemBase {
 
   Constants constants;
 
-  boolean shoot = false;
+  private boolean shoot = false;
 
   public Shooter(){
     lMaster = new WPI_TalonSRX(PortMap.kLMasterShooter);
