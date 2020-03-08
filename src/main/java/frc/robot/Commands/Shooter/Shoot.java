@@ -32,27 +32,32 @@ public class Shoot extends CommandBase {
   
   double oldTime;
   double sumTime;
+  double startTime;
 
   boolean button = false;
   boolean shootFlag = false;
   double shootingTime;
 
-  public Shoot(double shootngTime) {
-    this.shootingTime = shootingTime;
+  public Shoot(double shootingTime) {
     addRequirements(Robot.shooter);
     addRequirements(Robot.leds);
     addRequirements(Robot.limelight);
+    startTime = Timer.getFPGATimestamp();
+    this.shootingTime = shootingTime;
 
     button = false;
     constants = new Constants();
+
+    Robot.shooter.setStartedShootState(true);
   }
 
   public Shoot() {
-    shootingTime = 0;
     button = true;
+
     addRequirements(Robot.shooter);
     addRequirements(Robot.leds);
     addRequirements(Robot.limelight);
+    startTime = Timer.getFPGATimestamp();
 
     constants = new Constants();
   }
@@ -70,55 +75,60 @@ public class Shoot extends CommandBase {
     rightController.reset();
 
     oldTime = Timer.getFPGATimestamp();
+    startTime = Timer.getFPGATimestamp();
+
     sumTime = 0;
     
     Robot.shooter.changeShootState(true);
     SmartDashboard.putNumber("AimAndShoot", 10);
-    Robot.leds.changeLedState(StateLedFlag.SHOOTING);
+  // Robot.leds.changeLedState(StateLedFlag.SHOOTING);
   }
 
   @Override
   public void execute() {
-    // rightController.update();
-    // leftController.update();
+    rightController.update();
+    leftController.update();
 
-    // if(Math.abs(Robot.shooter.getRSpeed()) >= Math.abs(constants.maxShootSpeed-Constants.allowedShooterError) && Math.abs(Robot.shooter.getLSpeed()) >= Math.abs(constants.maxShootSpeed-Constants.allowedShooterError)){
-    //   Robot.shooter.changeShootState(true);
-    //   Robot.intake.setPower(0.30);
-    // } else if((Robot.shooter.getRSpeed() == 0 || Robot.shooter.getLSpeed() == 0) && (Math.abs(Robot.shooter.getRSpeed()) >= Math.abs(constants.maxShootSpeed-Constants.allowedShooterError) || Math.abs(Robot.shooter.getLSpeed()) >= Math.abs(constants.maxShootSpeed-Constants.allowedShooterError))){
-    //   Robot.shooter.changeShootState(true);
-    //   Robot.intake.setPower(0.30);
-    // }else {
-    //   Robot.shooter.changeShootState(false);
-    // }
+    if(Math.abs(Robot.shooter.getRSpeed()) >= Math.abs(constants.maxShootSpeed-Constants.allowedShooterError) && Math.abs(Robot.shooter.getLSpeed()) >= Math.abs(constants.maxShootSpeed-Constants.allowedShooterError)){
+      Robot.shooter.changeShootState(true);
+      Robot.intake.setPower(0.30);
+    } else if((Robot.shooter.getRSpeed() == 0 || Robot.shooter.getLSpeed() == 0) && (Math.abs(Robot.shooter.getRSpeed()) >= Math.abs(constants.maxShootSpeed-Constants.allowedShooterError) || Math.abs(Robot.shooter.getLSpeed()) >= Math.abs(constants.maxShootSpeed-Constants.allowedShooterError))){
+      Robot.shooter.changeShootState(true);
+      Robot.intake.setPower(0.30);
+    }else {
+      Robot.shooter.changeShootState(false);
+    }
 
   }
 
   @Override
   public void end(boolean interrupted) {
-    // shootFlag = false;
-    // Robot.shooter.setShootSpeed(0, 0);
-    // Robot.shooter.changeShootState(false);
-    // Robot.intake.changeIntakeFlag(Flag.START);
-    // Robot.intake.stopBalls();
-    // Robot.leds.turnOFF();
-    // Robot.transporter.resetBalls();
-    // Robot.limelight.changePipeline(0);
+    shootFlag = false;
+    Robot.shooter.setShootSpeed(0, 0);
+    Robot.shooter.changeShootState(false);
+    Robot.intake.changeIntakeFlag(Flag.START);
+    Robot.intake.stopBalls();
+    Robot.leds.turnOFF();
+    Robot.transporter.resetBalls();
+    Robot.limelight.changePipeline(0);
     SmartDashboard.putNumber("AimAndShoot2", 12);
-    Robot.leds.changeLedState(StateLedFlag.SHOOTING_END);
+    // Robot.leds.changeLedState(StateLedFlag.SHOOTING_END);
+
+    Robot.shooter.setStartedShootState(false);
   }
 
   @Override
   public boolean isFinished() {
     double newTime = Timer.getFPGATimestamp();
-    sumTime += newTime - oldTime;
-    oldTime = newTime;
-  //   SmartDashboard.putNumber("SumTime", sumTime);
-  //   if(button == true){
-  //     return false;
-  //   }else{
-    SmartDashboard.putNumber("AimAndShoot2", 11);
-      return sumTime >= shootingTime || !Robot.limelight.isTargetVisible();
-  //   }
+    //sumTime = newTime - oldTime;
+    ///oldTime = newTime;
+    SmartDashboard.putNumber("SumTime", sumTime);
+    if(button == true){
+      return false;
+    } else {
+      SmartDashboard.putNumber("AimAndShoot2", 11);
+      return newTime - startTime >= shootingTime;
+   }
   }
 }
+

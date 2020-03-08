@@ -135,11 +135,11 @@ public class DriveTrain extends SubsystemBase {
   }
 
   public double getLeftSpeed(){
-    return (Math.PI*0.19)*(lMaster.getSelectedSensorVelocity())/4096*10;
+    return (Math.PI*0.19) * (lMaster.getSelectedSensorVelocity())/4096*10;
   }
 
   public double getRightSpeed(){
-    return -(Math.PI*0.19)*(rMaster.getSelectedSensorVelocity())/4096*10;
+    return -(Math.PI*0.19) * (rMaster.getSelectedSensorVelocity())/4096*10;
   }
 
   public DifferentialDriveWheelSpeeds getSpeeds(){

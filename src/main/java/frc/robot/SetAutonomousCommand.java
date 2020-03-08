@@ -32,7 +32,7 @@ public class SetAutonomousCommand {
         config.setKinematics(Robot.driveTrain.getKinematics());
 
         Trajectory trajectory = TrajectoryGenerator.generateTrajectory(Arrays.asList(new Pose2d(),
-        new Pose2d(5.0, 0, new Rotation2d())), config);
+        new Pose2d(1.5, 0, new Rotation2d())), config);
 
         RamseteCommand follow = new RamseteCommand(trajectory, Robot.driveTrain::getPose,
         new RamseteController(constants.kRamseteTuningB, constants.kRamseteTuningZeta),

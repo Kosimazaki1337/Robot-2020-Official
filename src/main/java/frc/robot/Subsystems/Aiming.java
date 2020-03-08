@@ -22,12 +22,13 @@ import frc.robot.motion.SpeedPID;
 public class Aiming extends SubsystemBase {
   private WPI_VictorSPX aimMotor;
   private AnalogPotentiometer potentiometer;
-  private SpeedPID aimPID;
+ // private SpeedPID aimPID;
 
   private double positionToHold = 0;
 
-  private double positionToHold2 = 0;
+  private double positionToHold2 = 0.42;
 
+  private boolean isAuto = false;
 
   Constants constants;
 
@@ -39,57 +40,92 @@ public class Aiming extends SubsystemBase {
 
     aimMotor.configFactoryDefault();
 
-    aimPID = new SpeedPID(0.2, 0.001, 0.01, 0.0);
+    //aimPID = new SpeedPID(0.2, 0.001, 0.01, 0.0);
   }
 
   @Override
   public void periodic() {
-    opAim();
-    getShootingState();
-    //checkPotentiometerPosition();
-  }
 
+    double increment = 0.003;
+
+    SmartDashboard.putBoolean("IsAuto", isAuto);
+
+    // error = 
+    //Robot.aiming.setAimSpeed(-error * Constants.getConstants().aimingkP);
+
+    Robot.oi.operator.getRawButton(6);
+    if(isAuto){
+        positionLoop();
+    } else {
+        if (Robot.oi.getOperatorJoystick().getRawAxis(2) > 0.2){
+          ourSet(-0.15);
+        } else if (Robot.oi.getOperatorJoystick().getRawAxis(3) > 0.2){
+          ourSet(0.35);
+        } else {
+          ourSet(0);
+        }
+    }
+      SmartDashboard.putNumber("positionToHold2", positionToHold2);
+  }
+  
+  
   public void stopMotor(){
     aimMotor.set(ControlMode.PercentOutput, 0);
   }
 
+  private void positionLoop(){
+          // 0.30 na gorze
+      // 0.48 na dole
+      double actualPosition = Robot.aiming.getPotentometerPosition();
+      
+      // positionToHold2 == target == setPoint
+      double setPoint = Robot.aiming.getPositionToHold2();
+  
+      double error = actualPosition - setPoint; // 0.48 - 0.38 = 0.1
+      // 0.42 - 0.38 = 0.04
+
+      if(Math.abs(error) < Constants.getConstants().aimMinPotenciometrAllowError){
+        ourSet(0);          
+      } else {
+        if(error > 0){
+          ourSet(0.34);
+        } else if(error < 0){
+          ourSet(0.12);
+        }
+      }
+
+  }
+
   public void setAimSpeed(double speed){
 
-    if(speed > 0.25) {
-      speed = 0.25;
-    }else if(speed < -0.6) {
-      speed = -0.6;
+    if(speed > 0.35) {
+      speed = 0.35;
+    }else if(speed < -0.1) {
+      speed = -0.1;
     }
 
-    double multipler = 1.1;
-    double minOutputTurn = 0.05;
-    if(speed < minOutputTurn && speed >= 0){
-			speed = minOutputTurn;
-		}else if(speed > -minOutputTurn && speed <= 0){
-			speed = -minOutputTurn*multipler;
+    double multipler = 2.35;
+    double minOutputTurn = 0.13;
+
+    if(speed < minOutputTurn/3 && speed >= 0){
+			speed = minOutputTurn/3;
+		}else if(speed > -minOutputTurn*multipler && speed <= 0){
+      speed = -minOutputTurn*multipler;
 		}
 
-
-    if (potentiometer.get() < 0.48 && speed > 0){
-      aimMotor.set(ControlMode.PercentOutput, -speed);
-    }else if(potentiometer.get() > 0.30 && speed < 0){
-      aimMotor.set(ControlMode.PercentOutput, -speed);
-    }else{
-      aimMotor.set(0);
+    if(speed > 0.35) {
+      speed = 0.35;
+    }
+    if(speed < -0.05) {
+      speed = -0.05;
     }
 
-    SmartDashboard.putNumber("aimSpeed", speed);
     
+    
+    aimMotor.set(speed);    
   }
 
-  public void opAim(){
-    if (Robot.oi.getOperatorJoystick().getRawAxis(2) != 0){
-      Robot.aiming.setAimSpeed(Robot.oi.getOperatorJoystick().getRawAxis(2)/1.5);
-    }else if (Robot.oi.getOperatorJoystick().getRawAxis(3) != 0){
-      Robot.aiming.setAimSpeed(-Robot.oi.getOperatorJoystick().getRawAxis(3)/2);
-    }else Robot.aiming.setAimSpeed(0.0);
-  }
-
+  
   public double getAngle(){
     positionToHold = potentiometer.get();
     double positionRounded = Math.round(positionToHold*1000);
@@ -104,17 +140,41 @@ public class Aiming extends SubsystemBase {
   public double getPotentometerPosition(){
     return potentiometer.get();
   }
-
+  
   public void logs(){
     SmartDashboard.putNumber("aiming_ActualPosition", potentiometer.get());
     SmartDashboard.putNumber("AimMotorPercent", aimMotor.getMotorOutputPercent());
   }
-
+  
   public void setpositionToHold2(){
     positionToHold2 = getPotentometerPosition();
+  }
+  
+  public void setpositionToHold2(double pos){
+    positionToHold2 = pos;
   }
 
   public double getPositionToHold2(){
     return positionToHold2;
   }
+  private void ourSet(double _speed){
+    if (potentiometer.get() > 0.48){
+      // ogranicznik dolu
+      if(_speed < 0){
+        _speed = 0;
+      }
+    }else if(potentiometer.get() < 0.30){
+      if(_speed > 0){
+        _speed = 0;
+      } 
+    }
+    aimMotor.set(_speed);
+  }
+
+
+  public void setMode(boolean _isAuto){
+    isAuto = _isAuto;
+  }
 }
+    
+

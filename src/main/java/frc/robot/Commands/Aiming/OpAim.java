@@ -26,7 +26,7 @@ public class OpAim extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    Robot.aiming.opAim();
+    //Robot.aiming.opAim();
   }
 
   // Called once the command ends or is interrupted.

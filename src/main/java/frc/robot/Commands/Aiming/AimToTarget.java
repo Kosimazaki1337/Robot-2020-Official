@@ -17,7 +17,7 @@ import frc.robot.Subsystems.LEDState.StateLedFlag;
 
 public class AimToTarget extends CommandBase {
   
-  private PIDController controller;
+ // private PIDController controller;
   double yOffset;
   double target;
   double error;
@@ -32,8 +32,8 @@ public class AimToTarget extends CommandBase {
   @Override
   public void initialize() {
     Robot.limelight.changePipeline(0);
-    controller = new PIDController(0.076, 0.045, 0.0006);
     SmartDashboard.putNumber("AimAndShoot", 7);
+    Robot.aiming.setMode(true);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -41,21 +41,34 @@ public class AimToTarget extends CommandBase {
   public void execute() {
     yOffset = Robot.limelight.getYOffset();
     error = target - yOffset;
+    error *= -1;
+
     Robot.leds.changeLedState(StateLedFlag.AUTO_AIM);
 
-    Robot.aiming.setAimSpeed(controller.calculate(yOffset, target));
+    double pos = Robot.aiming.getPotentometerPosition();
+
+    //error <-1, 26>
+    // -1 shooter jest za wysoko trzeba go opusicic  czyli -0.15
+    // 26 shooter jest za nisko -> podnosimy (set 0.35)
+    if(error > 0){
+      Robot.aiming.setpositionToHold2(pos - 0.4);
+    } else if(error < 0){
+      Robot.aiming.setpositionToHold2(pos + 0.4);
+    }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    Robot.aiming.setMode(false);
     Robot.aiming.setAimSpeed(0.0);
     Robot.leds.changeLedState(StateLedFlag.AIMED);
     if(Math.abs(error) < Math.abs(Constants.kYAllowedError)){
       Robot.leds.changeLedState(StateLedFlag.AIMED);
     }
 
-    Robot.aiming.setpositionToHold2();
+    Robot.aiming.setpositionToHold2(Robot.aiming.getPotentometerPosition());
+
     SmartDashboard.putNumber("AimAndShoot", 9);
   }
 

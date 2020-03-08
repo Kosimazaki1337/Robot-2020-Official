@@ -29,7 +29,8 @@ public class OI {
     public JoystickButton shootTeleop;
     public JoystickButton intakeReverse;
     public JoystickButton shootAutoAim;
-    public JoystickButton returnToDriveTrainInDeCaseXD2;
+    public JoystickButton returnToDriveTrainInDeCaseKarciaZepsula;
+    public JoystickButton returnToDriveTrainInDeCaseLukaszZepsul;
     public JoystickButton setAimDown;
     public OI(){
         constants = new Constants();
@@ -41,10 +42,7 @@ public class OI {
         shootAutoAim.whenPressed(new AimSequence());
 
         setAimDown = new JoystickButton(operator, 2);
-        setAimDown.whenPressed(new SetAimingPosition(false));
-
-        intakeBalls = new JoystickButton(driver, 6);
-        intakeBalls.whileHeld(new IntakeBalls());
+        setAimDown.whenPressed(new SetAimingPosition(Robot.limelight.getYOffset()));
 
         intakeMove = new JoystickButton(operator, 4);
         intakeMove.whenPressed(new IntakeMove());
@@ -52,11 +50,11 @@ public class OI {
         shootTeleop = new JoystickButton(operator, 3);
         shootTeleop.whenHeld(new ButtonShoot());
 
-        intakeReverse = new JoystickButton(driver, 5);
-        intakeReverse.whenHeld(new ReverseIntake());
+        returnToDriveTrainInDeCaseKarciaZepsula = new JoystickButton(driver, 3);
+        returnToDriveTrainInDeCaseKarciaZepsula.whenPressed(new OpenLoopDrive());
 
-        returnToDriveTrainInDeCaseXD2 = new JoystickButton(driver, 8);
-        returnToDriveTrainInDeCaseXD2.whenPressed(new OpenLoopDrive());
+        returnToDriveTrainInDeCaseLukaszZepsul = new JoystickButton(operator, 8);
+        returnToDriveTrainInDeCaseLukaszZepsul.whenPressed(new OpenLoopDrive());
 
     }
 

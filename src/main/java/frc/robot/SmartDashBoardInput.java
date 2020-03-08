@@ -13,10 +13,10 @@ package frc.robot;
 public class SmartDashBoardInput {
     public void logs(){
         Robot.driveTrain.logs();
-        // Robot.limelight.logs();
-        // Robot.shooter.logs();
-         Robot.aiming.logs();
-        // Robot.transporter.logs();
+        Robot.limelight.logs();
+        Robot.shooter.logs();
+        Robot.aiming.logs();
+        Robot.transporter.logs();
 
     }
 }

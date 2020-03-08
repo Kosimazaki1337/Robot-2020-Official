@@ -48,6 +48,7 @@ public class OpenLoopDrive extends CommandBase {
   public void initialize() {
     leftController.reset();
     rightController.reset();
+    Robot.shooter.changeShootState(false);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -79,12 +80,17 @@ public class OpenLoopDrive extends CommandBase {
           rightSpeed = -Math.max(-speedV, -turnV);
         }
       }
-      Robot.driveTrain.setSpeed(leftController.calculate(Robot.driveTrain.getLeftSpeed(), leftSpeed*4),
-      rightController.calculate(-Robot.driveTrain.getRightSpeed(), -rightSpeed*4));
+      Robot.driveTrain.setSpeed(
+          leftController.calculate(Robot.driveTrain.getLeftSpeed(), leftSpeed*4),
+          rightController.calculate(-Robot.driveTrain.getRightSpeed(), -rightSpeed*4)
+      );
       SmartDashboard.putNumber("leftSpeed", leftSpeed*4);
       SmartDashboard.putNumber("rightSpeed", -rightSpeed*4);
       }else{
+        
         Robot.driveTrain.setSpeed(0.0, 0.0);
+        leftController.reset();
+        rightController.reset();
     }
   }
 

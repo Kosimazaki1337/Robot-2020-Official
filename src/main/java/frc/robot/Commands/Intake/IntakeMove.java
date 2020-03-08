@@ -17,8 +17,7 @@ import frc.robot.Subsystems.Intake.Flag;
 public class IntakeMove extends CommandBase {
 
   Constants constants;
-  double oldT;
-  double sumT;
+  double startT;
 
   public IntakeMove() {
     addRequirements(Robot.intake);
@@ -29,8 +28,7 @@ public class IntakeMove extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    oldT = Timer.getFPGATimestamp();
-    sumT = 0;
+    startT = Timer.getFPGATimestamp();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -59,8 +57,6 @@ public class IntakeMove extends CommandBase {
   @Override
   public boolean isFinished() {
     double newT = Timer.getFPGATimestamp();
-    sumT += newT - oldT;
-    oldT = newT;
-    return sumT >= 1.5;
+    return startT - newT >= 1.5;
   }
 }

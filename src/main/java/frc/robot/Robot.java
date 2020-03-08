@@ -21,9 +21,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Commands.Auto.AimAndShoot;
 import frc.robot.Commands.Auto.Shoot3BallsAndTake3BallsTrench;
 import frc.robot.Commands.Auto.Shoot3BallsAndTake5BallsTrench;
+import frc.robot.Commands.Auto.ShootAndDrive;
 import frc.robot.Subsystems.Aiming;
 import frc.robot.Subsystems.DriveTrain;
 import frc.robot.Subsystems.Intake;
@@ -37,6 +39,7 @@ public class Robot extends TimedRobot {
   private static final String k3B3BT = "ShootAndTake3BallsTrench";
   private static final String k3B5BT = "ShootAndTake5BallsTrench";
   private static final String test = "testAuto";
+  private static final String shootAndDrive = "ShootAndDrive";
   private String autoSelected;
 
   public static OI oi;
@@ -53,13 +56,14 @@ public class Robot extends TimedRobot {
 
   private UsbCamera camera;
 
-  Command setAutoCommand;
+  SequentialCommandGroup setAutoCommand;
 
   @Override
   public void robotInit() {
     autoChooser.setDefaultOption("DefaultDrive", kDefaultAuto);
     autoChooser.addOption("ShootAndTake3BallsTrench", k3B3BT);
     autoChooser.addOption("ShootAndTake5BallsTrench", k3B5BT);
+    autoChooser.addOption("ShootAndDrive", shootAndDrive);
     autoChooser.addOption("TestAuto", test);
 
     new Thread(() -> {
@@ -86,6 +90,8 @@ public class Robot extends TimedRobot {
     sdbi = new SmartDashBoardInput();
     limelight.setMode(3);
     SmartDashboard.putData(autoChooser);
+
+    
   }
 
   @Override
@@ -117,8 +123,16 @@ public class Robot extends TimedRobot {
         setAutoCommand = new AimAndShoot();
         setAutoCommand.schedule();
         SmartDashboard.putNumber("AutonomousCase", 2);
+        break;
+      case shootAndDrive:
+        setAutoCommand = new ShootAndDrive();
+        setAutoCommand.schedule();
+        break;
       case kDefaultAuto:
       default:
+        setAutoCommand = new ShootAndDrive();
+        setAutoCommand.schedule();
+        SmartDashboard.putNumber("AutonomousCase", 2.1);
         break;
     }
     

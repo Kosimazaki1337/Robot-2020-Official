@@ -39,8 +39,6 @@ public class Transporter extends SubsystemBase {
   private int countBalls = 0;
   private boolean flag = false;
 
-  private ColorSensorV3 colorSensor;
-
   State mState = State.INTAKE;
 
   Constants constants;
@@ -52,7 +50,6 @@ public class Transporter extends SubsystemBase {
 
     photoElectric = new DigitalInput(PortMap.kPhotoSensor);
     limitSwitch = new DigitalInput(PortMap.kLimitSwitch);
-    colorSensor = new ColorSensorV3(i2cPort);
     ultrasonic = new Ultrasonic(3, 4, Unit.kMillimeters);
 
     transportMotor.configFactoryDefault();
@@ -83,15 +80,15 @@ public class Transporter extends SubsystemBase {
     }
 
     if(Robot.shooter.getShootState()){
-      output = 0.55;
+      output = 0.325;
     }
 
     if(Robot.oi.getOperatorJoystick().getRawAxis(5) > 0.2){
-      output = -Robot.oi.getOperatorJoystick().getRawAxis(5)/0.6;
+      output = -Robot.oi.getOperatorJoystick().getRawAxis(5)/1.5;
     }
 
     if(Robot.oi.getOperatorJoystick().getRawAxis(5) < -0.2){
-      output = -Robot.oi.getOperatorJoystick().getRawAxis(5)/0.6;
+      output = -Robot.oi.getOperatorJoystick().getRawAxis(5)/1.5  ;
     }
 
     if(Robot.intake.getIntakeFlag() == Flag.STOP){

@@ -31,6 +31,8 @@ public class Climbing extends SubsystemBase {
   public void periodic() {
     SmartDashboard.putNumber("leftServo", climbLeftServo.getAngle());
     SmartDashboard.putNumber("rightServo", climbRightServo.getAngle());
+
+    joyServo();
     
   }
 
@@ -45,8 +47,8 @@ public class Climbing extends SubsystemBase {
   }
 
   public void joyServo(){
-    climbLeftServo.set(Robot.oi.getOperatorJoystick().getRawAxis(1));
-    climbRightServo.set(Robot.oi.getOperatorJoystick().getRawAxis(1));
+    climbLeftServo.set(Robot.oi.getOperatorJoystick().getRawAxis(1)/2);
+    climbRightServo.set(Robot.oi.getOperatorJoystick().getRawAxis(1)/2);
   }
 
 }

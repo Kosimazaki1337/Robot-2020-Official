@@ -28,6 +28,8 @@ public class Shooter extends SubsystemBase {
 
   Constants constants;
 
+  boolean wasStartedShooted = false;
+
   private boolean shoot = false;
 
   public Shooter(){
@@ -122,6 +124,14 @@ public class Shooter extends SubsystemBase {
 
   public boolean getShootState(){
     return shoot;
+  }
+
+  public boolean wasStartedShootState(){
+    return wasStartedShooted;
+  }
+
+  public void setStartedShootState(boolean state){
+    wasStartedShooted = state;
   }
 
   public void logs(){

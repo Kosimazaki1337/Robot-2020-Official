@@ -22,9 +22,9 @@ public class AimAndShoot extends SequentialCommandGroup {
   /**
    * Creates a new AimAndShoot.
    */
-  public AimAndShoot() {
+  public  AimAndShoot() {
     super(
-      new ParallelCommandGroup(new IntakeDown2(), new SetAimingPosition(true)), 
+      new ParallelCommandGroup(new IntakeDown2(), new SetAimingPosition(0.38)) , 
       new AimSequence(), 
       new AutoShoot()
       

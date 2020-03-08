@@ -44,7 +44,14 @@ public class Intake extends SubsystemBase {
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("intakeVolt", intakeMotor.getMotorOutputVoltage());
+    if(Robot.oi.getDriverJoystick().getRawAxis(2) > 0.1){
+      intakeMotor.set(-Robot.oi.getDriverJoystick().getRawAxis(2)/2);
+    }else if(Robot.oi.getDriverJoystick().getRawAxis(3) > 0.1){
+      intakeMotor.set(Robot.oi.getDriverJoystick().getRawAxis(3)/1.8);
+    }else{
+      intakeMotor.set(0);
+    }
+
   }
 
   public void setPower(double speed){

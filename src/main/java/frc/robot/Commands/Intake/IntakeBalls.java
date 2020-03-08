@@ -27,7 +27,7 @@ public class IntakeBalls extends CommandBase {
   @Override
   public void execute() {
     if(Robot.intake.getIntakeFlag() == Flag.START){
-      Robot.intake.setPower(0.50);
+      Robot.intake.setPower(0.55);
     }else{
       Robot.intake.stopBalls();
     }

@@ -5,27 +5,29 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.Commands.Intake;
+package frc.robot.Commands.Auto;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import frc.robot.Robot;
-import frc.robot.Subsystems.LEDState.StateLedFlag;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.Commands.Aiming.TrapezTurnToTarget;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/latest/docs/software/commandbased/convenience-features.html
-public class IntakeDown2 extends InstantCommand {
-  public IntakeDown2() {
-    addRequirements(Robot.intake);
-    //addRequirements(Robot.leds);
-  }
+public class ShootAndCollect extends SequentialCommandGroup {
+  /**
+   * Creates a new ShootAndCollect.
+   */
+  public ShootAndCollect() {
+    // Add your commands in the super() call, e.g.
+    // super(new FooCommand(), new BarCommand());
+    super(
+      new TrapezTurnToTarget(0, 1, -25),
+      new AimAndShoot(),
+      new TrapezTurnToTarget(0, 1, 25)
 
-  // Called when the command is initially scheduled.
-  @Override
-  public void initialize() {
-    Robot.intake.intakeDown();
-    SmartDashboard.putNumber("AimAndShoot", 0);
-    //Robot.leds.changeLedState(StateLedFlag.INTAKE_DOWN);
+      
+      
+      
+      );
   }
 }

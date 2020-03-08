@@ -105,6 +105,9 @@ public class Constants {
     public static double aimingkI = 0;
     public static double aimingkD = 0;
 
+    public final static double aimMinYAllowError = 0.015;
+    public final static double aimMinPotenciometrAllowError = 0.015;
+
     //LimeLight
 
     public static double yOffsetAllowedError = 0.5;
@@ -131,7 +134,7 @@ public class Constants {
     public static final double kLimeAimStageTwoY = 0.1;
     public static final double kLimeAimTargetY = 9.0;
     public static final double kYAllowedError = 2.0;
-    public static final double yAmingTargetAngle = -20.0;
+    public static final double yAmingTargetAngle = -17.0; //-20
 
     //turn controller
     public static final double minOutputTurn = 0.24;

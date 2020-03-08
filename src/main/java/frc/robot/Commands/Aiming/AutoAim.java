@@ -18,7 +18,9 @@ public class AutoAim extends CommandBase {
   double positionToHold;
   Constants constants;
 
-  SpeedPID aimPID;
+  double yOffset;
+  double target;
+  double error;
 
   public AutoAim() {
     addRequirements(Robot.aiming);
@@ -38,36 +40,38 @@ public class AutoAim extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double actualPosition = Robot.aiming.getPotentometerPosition();
-
-    double setPoint = Robot.aiming.getPositionToHold2();
-
-    if(actualPosition > setPoint){
-      double error = actualPosition - setPoint;
-      Robot.aiming.setAimSpeed(-error * Constants.getConstants().aimingkP);
-    }
+    yOffset = Robot.limelight.getYOffset();
+    error = target - yOffset;
+    error *= -1;
 
     Robot.leds.changeLedState(StateLedFlag.AUTO_AIM);
 
-    // SmartDashboard.putNumber("HoldPosition", positionToHold);
-    // SmartDashboard.putNumber("actualPotentiometer", actualPosition);
-    // Robot.aiming.setAimSpeed(aimPID.calculate(positionToHold, actualPosition));
-    // SmartDashboard.putNumber("Test", 2);
+    double pos = Robot.aiming.getPotentometerPosition();
+
+    //error <-1, 26>
+    // -1 shooter jest za wysoko trzeba go opusicic  czyli -0.15
+    // 26 shooter jest za nisko -> podnosimy (set 0.35)
+    if(error > 0){
+      Robot.aiming.setpositionToHold2(pos - 0.4);
+    } else if(error < 0){
+      Robot.aiming.setpositionToHold2(pos + 0.4);
+    }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     Robot.aiming.setAimSpeed(0.0);
-    SmartDashboard.putNumber("AimAndShoot", 12);
-    Robot.leds.changeLedState(StateLedFlag.AIMED);
+    Robot.aiming.setpositionToHold2(Robot.aiming.getPotentometerPosition());
+
+    //SmartDashboard.putNumber("AimAndShoot", 12);
+   // Robot.leds.changeLedState(StateLedFlag.AIMED);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    SmartDashboard.putNumber("AimAndShoot", 13);
-    SmartDashboard.putBoolean("isShooting", Robot.aiming.getShootingState());
-    return !Robot.shooter.getShootState();
+    return !Robot.shooter.wasStartedShootState();
+    //return ;
   }
 }
