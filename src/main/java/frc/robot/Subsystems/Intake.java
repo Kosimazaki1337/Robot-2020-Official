@@ -12,6 +12,8 @@ import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -25,6 +27,8 @@ public class Intake extends SubsystemBase {
   public Compressor compressor;
 
   private double intakeSpeed = 0.5;
+
+  public boolean isAutonomous = false;
 
   public enum Flag{
     START, STOP
@@ -44,14 +48,21 @@ public class Intake extends SubsystemBase {
 
   @Override
   public void periodic() {
-    if(Robot.oi.getDriverJoystick().getRawAxis(2) > 0.1){
-      intakeMotor.set(-Robot.oi.getDriverJoystick().getRawAxis(2)/2);
-    }else if(Robot.oi.getDriverJoystick().getRawAxis(3) > 0.1){
-      intakeMotor.set(Robot.oi.getDriverJoystick().getRawAxis(3)/1.8);
-    }else{
-      intakeMotor.set(0);
-    }
 
+      if(Robot.oi.getOperatorJoystick().getRawAxis(2) > 0.1){
+        intakeMotor.set(-Robot.oi.getOperatorJoystick().getRawAxis(2)/2);
+        isAutonomous = false;
+      }else if(Robot.oi.getOperatorJoystick().getRawAxis(3) > 0.1){
+        intakeMotor.set(Robot.oi.getOperatorJoystick().getRawAxis(3)/1.8);
+        isAutonomous = false;
+      }else if(isAutonomous){
+        intakeMotor.set(0.55);
+      }
+        else{
+        intakeMotor.set(0);
+      }
+
+    
   }
 
   public void setPower(double speed){

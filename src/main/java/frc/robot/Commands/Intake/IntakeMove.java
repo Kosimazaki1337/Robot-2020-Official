@@ -8,6 +8,7 @@
 package frc.robot.Commands.Intake;
 
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
@@ -51,12 +52,14 @@ public class IntakeMove extends CommandBase {
     }else if(Constants.getConstants().intakeSwitch == 1){
       Constants.getConstants().intakeSwitch = 0;
     }
+    Robot.intake.intakeOff();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
     double newT = Timer.getFPGATimestamp();
-    return startT - newT >= 1.5;
+    SmartDashboard.putBoolean("Delta", (startT - newT) > 2);
+    return false;
   }
 }

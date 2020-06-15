@@ -69,18 +69,18 @@ public class Transporter extends SubsystemBase {
     //   Robot.limelight.setMode(3);
     // }
 
-    if(!isTransorterFull()){
-      if(ultrasonic.getRangeMM()/10 < 25.0){
-          output = Constants.getConstants().twoBallsSpeedTransporter;
-      }else{
-          output = 0;
-      }
-    }else{
-      output = 0;
-    }
+    // if(!isTransorterFull()){
+    //   if(ultrasonic.getRangeMM()/10 < 25.0){
+    //       output = Constants.getConstants().twoBallsSpeedTransporter;
+    //   }else{
+    //       output = 0;
+    //   }
+    // }else{
+    //   output = 0;
+    // }
 
     if(Robot.shooter.getShootState()){
-      output = 0.325;
+      output = 0.365;
     }
 
     if(Robot.oi.getOperatorJoystick().getRawAxis(5) > 0.2){

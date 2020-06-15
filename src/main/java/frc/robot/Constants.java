@@ -60,26 +60,26 @@ public class Constants {
     public double intakeSwitch = 0;    
 
     //Shooter Constants
-    public static final double kPShootLeft = 0.0185; 
+    public static final double kPShootLeft = 0.0207; 
     public static final double kIShootLeft = 0.0045; //15
     public static final double kDShootLeft = 0.00015; 
     public static final double kFShootLeft = 0.0; 
-    public static final double kPShootRight = 0.0148; //0.22
+    public static final double kPShootRight = 0.017; //0.22
     public static final double kIShootRight = 0.0015; //0.001
     public static final double kDShootRight = 0.00018;  
     public static final double kFShootRight = 0.0; 
 
-    public static final double maxShootSpeed =  55.0; //RPS
     public static final double maxShootVelocity = 60.0;
     public static final double maxShootAcceleration = 45.0;
     public static final double kShooterLeft_kV = 0.0141;
     public static final double kShooterLeft_kA = 0.00365;
     public static final double kShooterRight_kV = 0.0148;
     public static final double kShooterRight_kA = 0.00179;
-
+    
     public static final double kMaxShooterOutput = 0.95;
-
-    public static final double allowedShooterError = 7.5;
+    
+    public static final double maxShootSpeed =  54.0; //RPS
+    public static final double allowedShooterError = 5.5;
 
     //Transporter Constants
     public static final double sparkTicksToMove = 4;
@@ -134,10 +134,20 @@ public class Constants {
     public static final double kLimeAimStageTwoY = 0.1;
     public static final double kLimeAimTargetY = 9.0;
     public static final double kYAllowedError = 2.0;
-    public static final double yAmingTargetAngle = -17.0; //-20
+    public static final double yAmingTargetAngle = -16.5; //-20
 
     //turn controller
-    public static final double minOutputTurn = 0.24;
+    public static final double minOutputTurn = 0.255;
+
+    public static final double turnAllowedError = 3;
+    public static final double turnkP = 0.03;
+    public static final double turnkI = 0.0004;
+    public static final double turnkD = 0.0008;
+
+    public static final double driveAnglekP = 0.02;
+    public static final double turnMaxVelocity = 30;
+    public static final double turnMaxAcceleration = 30;
+    public static final double maxTurnOutput = 0.15;
     
     public String getGameData() {
         return gameData;

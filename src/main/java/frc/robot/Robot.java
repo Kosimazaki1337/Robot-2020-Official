@@ -70,7 +70,7 @@ public class Robot extends TimedRobot {
         camera = CameraServer.getInstance().startAutomaticCapture(0);
         camera.setResolution(160, 120);
         CvSink cvSink = CameraServer.getInstance().getVideo();
-        ;CvSource outputStream = CameraServer.getInstance().putVideo("Intake", 160, 120);
+        CvSource outputStream = CameraServer.getInstance().putVideo("Intake", 160, 120);
 
 
         Mat mat = new Mat();
@@ -107,6 +107,9 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
+
+    driveTrain.stopAndReset();
+
     autoSelected = SmartDashboard.getString("AutoSelected", test);
 
     switch (autoSelected) {
@@ -134,23 +137,26 @@ public class Robot extends TimedRobot {
         setAutoCommand.schedule();
         SmartDashboard.putNumber("AutonomousCase", 2.1);
         break;
-    }
-    
+    } 
   }
 
   @Override
   public void autonomousPeriodic() {
+    //intake.isAutonomous = true;
     CommandScheduler.getInstance().run();
     SmartDashboard.putString("AutoMode", autoSelected);
   }
 
   @Override
   public void teleopInit() {
+    intake.isAutonomous = false;
     driveTrain.stopAndReset();
   }
 
   @Override
   public void teleopPeriodic() {
+    //intake.isAutonomous = false;
+
    //leds.blink();
    leds.teleopLeds();
     Scheduler.getInstance().run();
@@ -172,6 +178,8 @@ public class Robot extends TimedRobot {
       Robot.leds.setLedColorLED(Color.kBlack);
     }
   }
+
+  
 
   public void initSubsystems(){
     driveTrain = new DriveTrain();

@@ -53,14 +53,13 @@ public class Aiming extends SubsystemBase {
     // error = 
     //Robot.aiming.setAimSpeed(-error * Constants.getConstants().aimingkP);
 
-    Robot.oi.operator.getRawButton(6);
     if(isAuto){
         positionLoop();
     } else {
-        if (Robot.oi.getOperatorJoystick().getRawAxis(2) > 0.2){
-          ourSet(-0.15);
-        } else if (Robot.oi.getOperatorJoystick().getRawAxis(3) > 0.2){
-          ourSet(0.35);
+        if (Robot.oi.getOperatorJoystick().getRawButton(6)){
+          ourSet(-0.23);
+        } else if (Robot.oi.getOperatorJoystick().getRawButton(5)){
+          ourSet(0.24);
         } else {
           ourSet(0);
         }
@@ -88,7 +87,7 @@ public class Aiming extends SubsystemBase {
         ourSet(0);          
       } else {
         if(error > 0){
-          ourSet(0.34);
+          ourSet(0.38);
         } else if(error < 0){
           ourSet(0.12);
         }
@@ -113,8 +112,9 @@ public class Aiming extends SubsystemBase {
       speed = -minOutputTurn*multipler;
 		}
 
-    if(speed > 0.35) {
-      speed = 0.35;
+    //MAXOUTPUT
+    if(speed > 0.22) {
+      speed = 0.22;
     }
     if(speed < -0.05) {
       speed = -0.05;

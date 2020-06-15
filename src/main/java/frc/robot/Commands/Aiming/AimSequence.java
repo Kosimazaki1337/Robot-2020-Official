@@ -22,7 +22,7 @@ public class AimSequence extends SequentialCommandGroup {
     // super(new FooCommand(), new BarCommand());
 
     super(
-      new TrapezTurnToTarget(0, 0.8), 
+      new TrapezTurnToTarget(0, 1.4), 
       
       new AimToTarget(Constants.yAmingTargetAngle)
     );

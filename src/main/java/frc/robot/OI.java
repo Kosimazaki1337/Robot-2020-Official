@@ -32,6 +32,9 @@ public class OI {
     public JoystickButton returnToDriveTrainInDeCaseKarciaZepsula;
     public JoystickButton returnToDriveTrainInDeCaseLukaszZepsul;
     public JoystickButton setAimDown;
+    public JoystickButton setFirstPosition;
+    public JoystickButton setSecondPosition;
+
     public OI(){
         constants = new Constants();
 
@@ -55,6 +58,9 @@ public class OI {
 
         returnToDriveTrainInDeCaseLukaszZepsul = new JoystickButton(operator, 8);
         returnToDriveTrainInDeCaseLukaszZepsul.whenPressed(new OpenLoopDrive());
+
+        setFirstPosition = new JoystickButton(operator, 10);
+        setFirstPosition.whileHeld(new SetAimingPosition(0.34));
 
     }
 

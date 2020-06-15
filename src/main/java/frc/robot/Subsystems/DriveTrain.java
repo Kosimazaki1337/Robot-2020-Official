@@ -55,6 +55,8 @@ public class DriveTrain extends SubsystemBase {
 
   public ControlState mState = ControlState.OPEN_LOOP;
 
+  private double lastAimingTurn = 0;
+
   public DriveTrain() {
     lMaster = new WPI_TalonSRX(PortMap.kLMasterDrive);
     rMaster = new WPI_TalonSRX(PortMap.kRMasterDrive);
@@ -193,5 +195,13 @@ public class DriveTrain extends SubsystemBase {
     SmartDashboard.putNumber("driveTrain_LeftMPS", getLeftSpeed());
     SmartDashboard.putNumber("driveTrain_RightMPS", getRightSpeed());
     SmartDashboard.putNumber("driveTrain_GyroAngle", gyro.getAngle());
+  }
+
+  public double getLastAimingTurn() {
+    return lastAimingTurn;
+  }
+
+  public void setLastAimingTurn(double lastAimingTurn) {
+    this.lastAimingTurn = lastAimingTurn;
   }
 }

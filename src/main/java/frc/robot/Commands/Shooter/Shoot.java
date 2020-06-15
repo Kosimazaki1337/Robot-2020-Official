@@ -91,10 +91,12 @@ public class Shoot extends CommandBase {
 
     if(Math.abs(Robot.shooter.getRSpeed()) >= Math.abs(constants.maxShootSpeed-Constants.allowedShooterError) && Math.abs(Robot.shooter.getLSpeed()) >= Math.abs(constants.maxShootSpeed-Constants.allowedShooterError)){
       Robot.shooter.changeShootState(true);
-      Robot.intake.setPower(0.30);
+      Robot.shooter.setStartedShootState(true);
+      //Robot.intake.setPower(0.30);
     } else if((Robot.shooter.getRSpeed() == 0 || Robot.shooter.getLSpeed() == 0) && (Math.abs(Robot.shooter.getRSpeed()) >= Math.abs(constants.maxShootSpeed-Constants.allowedShooterError) || Math.abs(Robot.shooter.getLSpeed()) >= Math.abs(constants.maxShootSpeed-Constants.allowedShooterError))){
       Robot.shooter.changeShootState(true);
-      Robot.intake.setPower(0.30);
+      Robot.shooter.setStartedShootState(true);
+      //Robot.intake.setPower(0.30);
     }else {
       Robot.shooter.changeShootState(false);
     }
@@ -111,6 +113,8 @@ public class Shoot extends CommandBase {
     Robot.leds.turnOFF();
     Robot.transporter.resetBalls();
     Robot.limelight.changePipeline(0);
+    Robot.shooter.setStartedShootState(false);
+
     SmartDashboard.putNumber("AimAndShoot2", 12);
     // Robot.leds.changeLedState(StateLedFlag.SHOOTING_END);
 

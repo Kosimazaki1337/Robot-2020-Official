@@ -5,29 +5,23 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.Commands.Auto;
+package frc.robot.Commands.Intake;
 
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.SetAutonomousCommand;
-import frc.robot.Commands.Aiming.SetAimingPosition;
-import frc.robot.Commands.Drive.DriveTime;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.Robot;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/latest/docs/software/commandbased/convenience-features.html
-public class ShootAndDrive extends SequentialCommandGroup {
-  /**
-   * Creates a new ShootAndDrive.
-   */
-  public ShootAndDrive() {
-    super(
-      
-      new DriveTime(0.7, 0.3),
-      new AimAndShoot()
-      // new DriveTime(1.0, 0.3)
+public class TurnOnIntake extends InstantCommand {
+  public TurnOnIntake() {
+    addRequirements(Robot.intake);
+  }
 
-      
-      //new SetAutonomousCommand().getAutonomousCommand()
-    );
+  // Called when the command is initially scheduled.
+  @Override
+  public void initialize() {
+    Robot.intake.isAutonomous = true;
+    Robot.intake.intakeMotor.set(0.55);
   }
 }

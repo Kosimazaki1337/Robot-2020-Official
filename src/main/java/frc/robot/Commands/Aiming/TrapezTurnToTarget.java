@@ -68,6 +68,8 @@ public class TrapezTurnToTarget extends CommandBase {
     } else {
       profile = new TrapezoidalMotionProfile(offset, 40, 30);
     }
+
+    Robot.driveTrain.setLastAimingTurn(xOffset);
     
     if(pipeline == 0){
       controller = new TurnController(profile, allowedError, Constants.kPLimeAim, Constants.kILimeAim, Constants.kDLimeAim);

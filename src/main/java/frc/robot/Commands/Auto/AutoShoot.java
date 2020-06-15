@@ -19,12 +19,12 @@ public class AutoShoot extends ParallelCommandGroup {
   /**
    * Creates a new AutoTest.
    */
-  public AutoShoot() {
+  public AutoShoot(double time) {
     // Add your commands in the super() call, e.g.
     // super(new FooCommand(), new BarCommand());
     super(
-        new Shoot(5),
-        new AutoAim()
+        new Shoot(time)//,
+       // new AutoAim()
       );
   }
 }
